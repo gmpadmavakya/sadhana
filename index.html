@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daily Sadhana Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    --bg: #eef2f0;
+    --surface: #ffffff;
+    --ink: #1c2a28;
+    --muted: #5d6f6c;
+    --line: #cfdad7;
+    --accent: #c9731a;
+    --accent-ink: #ffffff;
+    --chip: #e2ebe8;
+    --ok: #2e7d5b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121c1b; --surface: #1b2827; --ink: #e8f0ee; --muted: #9bb0ac;
+      --line: #2e4240; --accent: #e08a2e; --accent-ink: #1a1206; --chip: #263836; --ok: #5fc395;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121c1b; --surface: #1b2827; --ink: #e8f0ee; --muted: #9bb0ac;
+    --line: #2e4240; --accent: #e08a2e; --accent-ink: #1a1206; --chip: #263836; --ok: #5fc395;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  main { max-width: 520px; margin: 0 auto; padding: 20px 16px 40px; }
+  h1 { font: 600 28px/1.15 "Source Serif 4", Georgia, serif; margin: 4px 0 18px; }
+  .field { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
+  .field > label, .field > .lbl { display: block; font-size: 14px; color: var(--muted); margin-bottom: 6px; }
+  .row { display: flex; gap: 10px; align-items: center; }
+  .row > * { flex: 1; min-width: 0; }
+  input[type="time"], input[type="date"], input[type="text"], input[type="tel"], textarea {
+    width: 100%; font: inherit; font-size: 18px; color: var(--ink);
+    background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
+    min-height: 46px;
+  }
+  textarea { resize: vertical; min-height: 70px; }
+  input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .sep { flex: 0 0 auto; color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .chip {
+    font: inherit; font-size: 15px; color: var(--ink); background: var(--chip);
+    border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; min-height: 40px; cursor: pointer;
+  }
+  .chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .stepper { display: flex; align-items: center; gap: 12px; }
+  .stepper button {
+    flex: 0 0 52px; height: 52px; font-size: 28px; line-height: 1; color: var(--ink);
+    background: var(--chip); border: 1px solid var(--line); border-radius: 12px; cursor: pointer;
+  }
+  .stepper output { flex: 1; text-align: center; font: 600 32px/1 "Source Serif 4", Georgia, serif; }
+  .preview-wrap { margin-top: 18px; }
+  .preview-wrap .lbl { font-size: 14px; color: var(--muted); margin-bottom: 6px; }
+  pre#preview {
+    margin: 0; white-space: pre-wrap; word-break: break-word;
+    font: 15px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: var(--surface); border: 1px dashed var(--line); border-radius: 14px; padding: 14px;
+  }
+  .actions { display: grid; gap: 10px; margin-top: 14px; }
+  .btn {
+    display: flex; align-items: center; justify-content: center; text-decoration: none;
+    font: 600 18px/1 inherit; min-height: 56px; border-radius: 14px; border: 1px solid var(--line);
+    background: var(--surface); color: var(--ink); cursor: pointer; width: 100%;
+  }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  #status { min-height: 22px; text-align: center; color: var(--ok); font-size: 15px; margin-top: 8px; }
+  details { margin-top: 16px; color: var(--muted); font-size: 14px; }
+  details summary { cursor: pointer; padding: 8px 0; }
+  .link-btn { background: none; border: none; color: var(--muted); font: inherit; text-decoration: underline; padding: 8px 0; cursor: pointer; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Daily Sadhana Card</h1>
+
+  <div class="field">
+    <label for="date">Date</label>
+    <input type="date" id="date">
+  </div>
+
+  <div class="field">
+    <div class="row">
+      <div><label for="bed" style="display:block;font-size:14px;color:var(--muted);margin-bottom:6px">To bed (pm)</label><input type="time" id="bed"></div>
+      <div><label for="wake" style="display:block;font-size:14px;color:var(--muted);margin-bottom:6px">Wake up (AM)</label><input type="time" id="wake"></div>
+    </div>
+  </div>
+
+  <div class="field">
+    <span class="lbl">Japa (No of Rounds)</span>
+    <div class="stepper">
+      <button type="button" id="minus" aria-label="One round fewer">−</button>
+      <output id="rounds" aria-live="polite">16</output>
+      <button type="button" id="plus" aria-label="One round more">+</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <span class="lbl">Japa time</span>
+    <div class="row">
+      <input type="time" id="jstart" aria-label="Japa start">
+      <span class="sep">to</span>
+      <input type="time" id="jend" aria-label="Japa end">
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="sravanam">Sravanam time</label>
+    <input type="text" id="sravanam" placeholder="e.g. 30 min">
+    <div class="chips" data-target="sravanam"></div>
+  </div>
+
+  <div class="field">
+    <label for="reading">Reading time</label>
+    <input type="text" id="reading" placeholder="e.g. 20 min">
+    <div class="chips" data-target="reading"></div>
+  </div>
+
+  <div class="field">
+    <label for="seva">Seva</label>
+    <textarea id="seva" placeholder="What seva did you do?"></textarea>
+  </div>
+
+  <div class="field">
+    <label for="sangha">Sangha time</label>
+    <input type="text" id="sangha" placeholder="e.g. 1 hr">
+    <div class="chips" data-target="sangha"></div>
+  </div>
+
+  <div class="preview-wrap">
+    <div class="lbl">Message preview</div>
+    <pre id="preview"></pre>
+  </div>
+
+  <div class="actions">
+    <a class="btn primary" id="send" href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
+    <button class="btn" id="copy" type="button">Copy text</button>
+  </div>
+  <div id="status" role="status" aria-live="polite"></div>
+
+  <details>
+    <summary>Settings</summary>
+    <div class="field">
+      <label for="phone">WhatsApp number (optional, opens that chat directly)</label>
+      <input type="tel" id="phone" inputmode="tel" placeholder="Country code + number, e.g. 15551234567">
+    </div>
+    <button type="button" class="link-btn" id="reset">Clear all fields</button>
+  </details>
+</main>
+
+<script>
+(function () {
+  var KEY = "sadhana-card-v1";
+  var $ = function (id) { return document.getElementById(id); };
+  var textIds = ["bed", "wake", "jstart", "jend", "sravanam", "reading", "seva", "sangha", "phone"];
+  var rounds = 16;
+
+  function pad(n) { return n < 10 ? "0" + n : "" + n; }
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  }
+  function fmtDate(iso) {
+    if (!iso) return "";
+    var p = iso.split("-");
+    return p[1] + "/" + p[2] + "/" + p[0];
+  }
+  function fmtTime(v) {
+    if (!v) return "";
+    var p = v.split(":");
+    var h = parseInt(p[0], 10), m = p[1];
+    var ap = h >= 12 ? "PM" : "AM";
+    h = h % 12; if (h === 0) h = 12;
+    return h + ":" + m + " " + ap;
+  }
+
+  function load() {
+    var s = {};
+    try { s = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { s = {}; }
+    textIds.forEach(function (id) { if (s[id] != null) $(id).value = s[id]; });
+    if (typeof s.rounds === "number") rounds = s.rounds;
+  }
+  function save() {
+    var s = { rounds: rounds };
+    textIds.forEach(function (id) { s[id] = $(id).value; });
+    try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
+  }
+
+  function build() {
+    return [
+      "*Daily Sadhana Card*",
+      "Date: " + fmtDate($("date").value),
+      "To bed: " + fmtTime($("bed").value),
+      "Wake up: " + fmtTime($("wake").value),
+      "Japa (No of Rounds): " + rounds,
+      "Japa time: " + fmtTime($("jstart").value) + " to " + fmtTime($("jend").value),
+      "Sravanam time: " + $("sravanam").value.trim(),
+      "Reading time: " + $("reading").value.trim(),
+      "Seva: " + $("seva").value.trim(),
+      "Sangha Time: " + $("sangha").value.trim()
+    ].join("\n");
+  }
+
+  function refresh() {
+    $("rounds").textContent = rounds;
+    var text = build();
+    $("preview").textContent = text;
+    var phone = $("phone").value.replace(/\D/g, "");
+    $("send").href = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
+    save();
+  }
+
+  function flash(msg) {
+    $("status").textContent = msg;
+    setTimeout(function () { $("status").textContent = ""; }, 2500);
+  }
+
+  // Quick-pick chips for duration fields
+  var picks = ["15 min", "30 min", "45 min", "1 hr", "1.5 hr"];
+  document.querySelectorAll(".chips").forEach(function (box) {
+    var target = $(box.getAttribute("data-target"));
+    picks.forEach(function (p) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "chip"; b.textContent = p;
+      b.addEventListener("click", function () { target.value = p; sync(); refresh(); });
+      box.appendChild(b);
+    });
+    target.addEventListener("input", sync);
+    function sync() {
+      box.querySelectorAll(".chip").forEach(function (c) {
+        c.setAttribute("aria-pressed", c.textContent === target.value.trim() ? "true" : "false");
+      });
+    }
+    box._sync = sync;
+  });
+  function syncAllChips() { document.querySelectorAll(".chips").forEach(function (b) { b._sync(); }); }
+
+  $("minus").addEventListener("click", function () { if (rounds > 0) rounds--; refresh(); });
+  $("plus").addEventListener("click", function () { rounds++; refresh(); });
+
+  $("copy").addEventListener("click", function () {
+    var text = build();
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+      flash(ok ? "Copied" : "Copy failed. Select the preview text and copy it.");
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { flash("Copied"); }, fallback);
+    } else { fallback(); }
+  });
+
+  $("reset").addEventListener("click", function () {
+    textIds.forEach(function (id) { if (id !== "phone") $(id).value = ""; });
+    rounds = 16; $("date").value = todayISO();
+    syncAllChips(); refresh(); flash("Cleared");
+  });
+
+  $("date").value = todayISO();
+  load();
+  syncAllChips();
+  document.querySelectorAll("input, textarea").forEach(function (el) {
+    el.addEventListener("input", function () { syncAllChips(); refresh(); });
+    el.addEventListener("change", refresh);
+  });
+  refresh();
+})();
+</script>
+</body>
+</html>
