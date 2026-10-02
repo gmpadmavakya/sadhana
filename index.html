@@ -13,98 +13,123 @@
     --bg1: #fff4e6; --bg2: #e8f1ff;
     --surface: #ffffff; --input: #f6f8fc;
     --ink: #1e2433; --muted: #66708a; --line: #dde3ef; --chip: #eef2fa;
-    --ok: #0f9d58;
+    --ok: #0f9d58; --zero: #475569; --zero-ink: #ffffff;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg1: #1d1726; --bg2: #101a2a; --surface: #1c2433; --input: #141b28;
       --ink: #eef2fb; --muted: #9aa6c0; --line: #2e3a52; --chip: #26324a; --ok: #4ade80;
+      --zero: #94a3b8; --zero-ink: #0f172a;
     }
   }
   :root[data-theme="dark"] {
     --bg1: #1d1726; --bg2: #101a2a; --surface: #1c2433; --input: #141b28;
     --ink: #eef2fb; --muted: #9aa6c0; --line: #2e3a52; --chip: #26324a; --ok: #4ade80;
+    --zero: #94a3b8; --zero-ink: #0f172a;
   }
   html { scroll-padding-top: env(safe-area-inset-top, 0px); height: 100%; }
   *, *::before, *::after { box-sizing: border-box; }
   [hidden] { display: none !important; }
+  button { font-family: inherit; }
   body {
     margin: 0; min-height: 100%; color: var(--ink);
     background: var(--bg1);
     background: linear-gradient(160deg, var(--bg1), var(--bg2)) fixed;
     font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
-  main { max-width: 420px; margin: 0 auto; padding: 16px 14px 40px; }
+  main { max-width: 420px; margin: 0 auto; padding: 14px 14px 40px; }
   h1 {
-    font: 600 28px/1.15 "Source Serif 4", Georgia, serif; margin: 4px 0 16px; text-align: center;
+    font: 600 28px/1.15 "Source Serif 4", Georgia, serif; margin: 2px 0 14px; text-align: center;
     background: linear-gradient(90deg, #ea580c, #db2777, #7c3aed, #2563eb);
     -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
   }
 
   .field {
     background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--c);
-    border-radius: 14px; padding: 10px 12px 12px; margin-bottom: 9px; min-width: 0;
+    border-radius: 14px; padding: 8px 10px 10px; margin-bottom: 8px; min-width: 0;
   }
-  .head { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
+  .head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
   .ico {
-    width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; font-size: 18px;
+    flex: 0 0 auto; width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; font-size: 18px;
     background: var(--chip);
     background: color-mix(in srgb, var(--c) 16%, var(--surface));
   }
-  .name { font-weight: 600; font-size: 15px; }
+  .name { font-weight: 600; font-size: 16px; line-height: 1.2; }
+
+  /* row tile: label column left, controls right */
+  .rt { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; align-items: center; }
+  .lab { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+  .rc { min-width: 0; }
+
+  /* merged wake / bed tile */
+  .pair {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 8px; overflow: hidden;
+  }
+  .half { padding: 8px 10px 10px; border-left: 5px solid var(--c); min-width: 0; }
 
   input[type="text"], input[type="tel"], textarea {
     display: block; width: 100%; min-width: 0; font: inherit; font-size: 16px; color: var(--ink);
-    background: var(--input); border: 1.5px solid var(--line); border-radius: 10px; padding: 9px 11px; min-height: 42px;
+    background: var(--input); border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 10px; min-height: 42px;
   }
-  textarea { resize: vertical; min-height: 64px; }
+  textarea { resize: vertical; min-height: 56px; }
   input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--c, #2563eb); outline-offset: 2px; }
 
   .tbtn, .datebox {
-    display: flex; align-items: center; justify-content: center; width: 100%; min-width: 0; min-height: 46px;
-    font: 600 18px/1 inherit; color: var(--ink); padding: 8px 10px; border-radius: 10px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; width: 100%; min-width: 0; min-height: 44px;
+    font-size: 18px; font-weight: 600; line-height: 1.1; font-family: inherit; color: var(--ink);
+    padding: 6px 8px; border-radius: 10px; cursor: pointer; text-align: center;
     border: 1.5px solid var(--c);
     background: var(--input);
     background: color-mix(in srgb, var(--c) 9%, var(--surface));
   }
   .tbtn.empty { color: var(--muted); font-weight: 400; }
-  .trow { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px; align-items: center; }
-  .sep { color: var(--muted); font-size: 15px; }
-  .datebox { position: relative; }
+  .trow { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 6px; align-items: center; }
+  .sep { color: var(--muted); font-size: 16px; }
+  .datebox { position: relative; font-size: 16px; }
   .datebox input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; }
+  .daterow { display: flex; gap: 8px; align-items: stretch; }
+  .daterow .datebox { flex: 1 1 auto; }
+  .todaybtn {
+    flex: 0 0 auto; min-height: 44px; padding: 0 12px; font-size: 16px; font-weight: 600; font-family: inherit;
+    color: var(--c); background: var(--chip); background: color-mix(in srgb, var(--c) 12%, var(--surface));
+    border: 1.5px solid var(--c); border-radius: 10px; cursor: pointer;
+  }
 
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
   .chip {
-    font: 500 14px/1 inherit; color: var(--ink); background: var(--chip);
-    border: 1px solid var(--line); border-radius: 999px; padding: 0 12px; min-height: 36px; cursor: pointer;
+    font-size: 16px; font-weight: 500; line-height: 1; font-family: inherit; color: var(--ink); background: var(--chip);
+    border: 1px solid var(--line); border-radius: 999px; padding: 0 4px; min-height: 38px; cursor: pointer; white-space: nowrap;
   }
   .chip[aria-pressed="true"] { background: var(--c); border-color: var(--c); color: #fff; font-weight: 600; }
+  .chip.zero { color: var(--zero); border: 1.5px solid var(--zero); background: var(--chip); background: color-mix(in srgb, var(--zero) 10%, var(--surface)); }
+  .chip.zero[aria-pressed="true"] { background: var(--zero); border-color: var(--zero); color: var(--zero-ink); }
 
-  .stepper { display: flex; align-items: center; gap: 10px; }
+  .stepper { display: flex; align-items: center; gap: 8px; }
   .stepper button {
-    flex: 0 0 48px; height: 48px; font-size: 26px; line-height: 1; color: var(--c);
+    flex: 0 0 46px; height: 46px; font-size: 26px; line-height: 1; color: var(--c);
     background: var(--chip); border: 1.5px solid var(--c); border-radius: 12px; cursor: pointer;
   }
   .stepper output { flex: 1; text-align: center; font: 600 32px/1 "Source Serif 4", Georgia, serif; color: var(--c); }
 
-  .preview-wrap { margin-top: 16px; }
-  .preview-wrap .lbl { font-size: 14px; color: var(--muted); margin-bottom: 6px; }
+  .preview-wrap { margin-top: 14px; }
+  .preview-wrap .lbl { font-size: 16px; color: var(--muted); margin-bottom: 6px; }
   pre#preview {
     margin: 0; white-space: pre-wrap; word-break: break-word;
-    font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    font: 15px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     background: var(--surface); border: 1.5px dashed var(--line); border-radius: 14px; padding: 12px;
   }
   .actions { display: grid; gap: 10px; margin-top: 14px; }
   .btn {
     display: flex; align-items: center; justify-content: center; text-decoration: none;
-    font: 600 18px/1 inherit; min-height: 54px; border-radius: 14px; border: 1.5px solid var(--line);
-    background: var(--surface); color: var(--ink); cursor: pointer; width: 100%;
+    font-size: 18px; font-weight: 600; line-height: 1; font-family: inherit; min-height: 54px; border-radius: 14px;
+    border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; width: 100%;
   }
   .btn.primary { color: #fff; border: 0; background: linear-gradient(90deg, #ea580c, #db2777, #7c3aed); }
-  #status { min-height: 22px; text-align: center; color: var(--ok); font-size: 15px; margin-top: 8px; }
-  details { margin-top: 14px; color: var(--muted); font-size: 14px; }
+  #status { min-height: 24px; text-align: center; color: var(--ok); font-size: 16px; margin-top: 8px; }
+  details { margin-top: 14px; color: var(--muted); font-size: 16px; }
   details summary { cursor: pointer; padding: 8px 0; }
-  .link-btn { background: none; border: none; color: var(--muted); font: inherit; text-decoration: underline; padding: 8px 0; cursor: pointer; }
+  .link-btn { background: none; border: none; color: var(--muted); font: inherit; font-size: 16px; text-decoration: underline; padding: 8px 0; cursor: pointer; }
 
   /* time picker sheet */
   .sheet {
@@ -114,7 +139,7 @@
   }
   .sheet-card { background: var(--surface); width: 100%; max-width: 380px; border-radius: 22px 22px 0 0; padding: 14px 16px 16px; }
   @media (min-width: 600px) { .sheet { align-items: center; } .sheet-card { border-radius: 22px; } }
-  .sheet-title { text-align: center; font-size: 14px; color: var(--muted); margin-bottom: 4px; }
+  .sheet-title { text-align: center; font-size: 16px; color: var(--muted); margin-bottom: 4px; }
   .tdisp { display: flex; align-items: center; justify-content: center; gap: 4px; }
   .tdisp .colon { font: 600 44px/1 "Source Serif 4", Georgia, serif; }
   .seg {
@@ -124,15 +149,15 @@
   .seg[aria-pressed="true"] { background: var(--chip); background: color-mix(in srgb, var(--pc) 16%, var(--surface)); color: var(--pc); }
   .ampm { display: flex; flex-direction: column; gap: 4px; margin-left: 10px; }
   .ampm button {
-    font: 600 15px/1 inherit; color: var(--ink); background: var(--chip); border: 1.5px solid var(--line);
-    border-radius: 8px; padding: 9px 12px; cursor: pointer;
+    font-size: 17px; font-weight: 600; line-height: 1; font-family: inherit; color: var(--ink); background: var(--chip);
+    border: 1.5px solid var(--line); border-radius: 8px; padding: 9px 12px; cursor: pointer;
   }
   .ampm button[aria-pressed="true"] { background: var(--pc); border-color: var(--pc); color: #fff; }
   #dial { display: block; width: 100%; max-width: 280px; margin: 10px auto; touch-action: none; user-select: none; -webkit-user-select: none; }
   .sheet-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
   .sheet-actions button {
-    min-height: 46px; font: 600 16px/1 inherit; border-radius: 12px; border: 1.5px solid var(--line);
-    background: var(--chip); color: var(--ink); cursor: pointer;
+    min-height: 46px; font-size: 17px; font-weight: 600; line-height: 1; font-family: inherit; border-radius: 12px;
+    border: 1.5px solid var(--line); background: var(--chip); color: var(--ink); cursor: pointer;
   }
   .sheet-actions .ok { background: var(--pc); border-color: var(--pc); color: #fff; }
   .sheet button:focus-visible { outline: 3px solid var(--pc); outline-offset: 2px; }
@@ -142,49 +167,51 @@
 <main>
   <h1>Daily Sadhana Card</h1>
 
-  <section class="field" style="--c:#2563eb">
-    <div class="head"><span class="ico">📅</span><span class="name">Date</span></div>
-    <div class="datebox"><span id="datedisp"></span><input type="date" id="date" aria-label="Date"></div>
+  <section class="field rt" style="--c:#2563eb">
+    <div class="lab"><span class="ico">📅</span><span class="name">Date</span></div>
+    <div class="rc daterow">
+      <div class="datebox"><span id="datedisp"></span><input type="date" id="date" aria-label="Date"></div>
+      <button type="button" class="todaybtn" id="today">Today</button>
+    </div>
   </section>
 
-  <section class="field" style="--c:#d97706">
-    <div class="head"><span class="ico">🌅</span><span class="name">Wake up</span></div>
-    <button type="button" class="tbtn empty" data-time="wake">Set time</button>
-  </section>
+  <div class="pair">
+    <section class="half" style="--c:#d97706">
+      <div class="head"><span class="ico">🌅</span><span class="name">Wake up</span></div>
+      <button type="button" class="tbtn empty" data-time="wake">Set time</button>
+    </section>
+    <section class="half" style="--c:#4f46e5">
+      <div class="head"><span class="ico">🌙</span><span class="name">To bed</span></div>
+      <button type="button" class="tbtn empty" data-time="bed">Set time</button>
+    </section>
+  </div>
 
-  <section class="field" style="--c:#4f46e5">
-    <div class="head"><span class="ico">🌙</span><span class="name">To bed</span></div>
-    <button type="button" class="tbtn empty" data-time="bed">Set time</button>
-  </section>
-
-  <section class="field" style="--c:#db2777">
-    <div class="head"><span class="ico">📿</span><span class="name">Japa (No of rounds)</span></div>
-    <div class="stepper">
+  <section class="field rt" style="--c:#db2777">
+    <div class="lab"><span class="ico">📿</span><span class="name">Japa (No of rounds)</span></div>
+    <div class="rc stepper">
       <button type="button" id="minus" aria-label="One round fewer">−</button>
       <output id="rounds" aria-live="polite">16</output>
       <button type="button" id="plus" aria-label="One round more">+</button>
     </div>
   </section>
 
-  <section class="field" style="--c:#7c3aed">
-    <div class="head"><span class="ico">⏰</span><span class="name">Japa time</span></div>
-    <div class="trow">
+  <section class="field rt" style="--c:#7c3aed">
+    <div class="lab"><span class="ico">⏰</span><span class="name">Japa time</span></div>
+    <div class="rc trow">
       <button type="button" class="tbtn empty" data-time="jstart" aria-label="Japa start">Start</button>
       <span class="sep">to</span>
       <button type="button" class="tbtn empty" data-time="jend" aria-label="Japa end">End</button>
     </div>
   </section>
 
-  <section class="field" style="--c:#0891b2">
-    <div class="head"><span class="ico">🎧</span><span class="name">Sravanam time</span></div>
-    <input type="text" id="sravanam" placeholder="e.g. 30 min" aria-label="Sravanam time">
-    <div class="chips" data-target="sravanam"></div>
+  <section class="field rt" style="--c:#0891b2">
+    <div class="lab"><span class="ico">🎧</span><span class="name">Sravanam time</span></div>
+    <div class="rc chips" data-target="sravanam"></div>
   </section>
 
-  <section class="field" style="--c:#059669">
-    <div class="head"><span class="ico">📖</span><span class="name">Reading time</span></div>
-    <input type="text" id="reading" placeholder="e.g. 20 min" aria-label="Reading time">
-    <div class="chips" data-target="reading"></div>
+  <section class="field rt" style="--c:#059669">
+    <div class="lab"><span class="ico">📖</span><span class="name">Reading time</span></div>
+    <div class="rc chips" data-target="reading"></div>
   </section>
 
   <section class="field" style="--c:#ea580c">
@@ -192,16 +219,14 @@
     <textarea id="seva" placeholder="What seva did you do?" aria-label="Seva"></textarea>
   </section>
 
-  <section class="field" style="--c:#e11d48">
-    <div class="head"><span class="ico">🕐</span><span class="name">Seva time</span></div>
-    <input type="text" id="sevatime" placeholder="e.g. 1 hr" aria-label="Seva time">
-    <div class="chips" data-target="sevatime"></div>
+  <section class="field rt" style="--c:#e11d48">
+    <div class="lab"><span class="ico">🕐</span><span class="name">Seva time</span></div>
+    <div class="rc chips" data-target="sevatime"></div>
   </section>
 
-  <section class="field" style="--c:#0d9488">
-    <div class="head"><span class="ico">🤝</span><span class="name">Sangha time</span></div>
-    <input type="text" id="sangha" placeholder="e.g. 1 hr" aria-label="Sangha time">
-    <div class="chips" data-target="sangha"></div>
+  <section class="field rt" style="--c:#0d9488">
+    <div class="lab"><span class="ico">🤝</span><span class="name">Sangha time</span></div>
+    <div class="rc chips" data-target="sangha"></div>
   </section>
 
   <div class="preview-wrap">
@@ -210,7 +235,7 @@
   </div>
 
   <div class="actions">
-    <a class="btn primary" id="send" href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
+    <a class="btn primary" id="send" href="#" target="_blank" rel="noopener">Send to Mentor</a>
     <button class="btn" id="copy" type="button">Copy text</button>
   </div>
   <div id="status" role="status" aria-live="polite"></div>
@@ -218,7 +243,7 @@
   <details>
     <summary>Settings</summary>
     <section class="field" style="--c:#2563eb">
-      <div class="head"><span class="name">WhatsApp number (optional, opens that chat directly)</span></div>
+      <div class="head"><span class="name">Mentor's WhatsApp number (optional, opens that chat directly)</span></div>
       <input type="tel" id="phone" inputmode="tel" placeholder="Country code + number, e.g. 15551234567" aria-label="WhatsApp number">
     </section>
     <button type="button" class="link-btn" id="reset">Clear all fields</button>
@@ -248,13 +273,16 @@
 
 <script>
 (function () {
-  var KEY = "sadhana-card-v2";
+  var KEY = "sadhana-card-v3";
   var $ = function (id) { return document.getElementById(id); };
-  var textIds = ["sravanam", "reading", "seva", "sevatime", "sangha", "phone"];
+  var textIds = ["seva", "phone"];
+  var durIds = ["sravanam", "reading", "sevatime", "sangha"];
   var times = { wake: "", bed: "", jstart: "", jend: "" };
+  var dur = { sravanam: "", reading: "", sevatime: "", sangha: "" };
   var defaults = { wake: "05:00", bed: "22:00", jstart: "05:30", jend: "08:00" };
   var titles = { wake: "Wake up", bed: "To bed", jstart: "Japa start", jend: "Japa end" };
   var rounds = 16;
+  var endTouched = false;
   var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   function pad(n) { return n < 10 ? "0" + n : "" + n; }
@@ -271,37 +299,53 @@
     h = h % 12; if (h === 0) h = 12;
     return h + ":" + p[1] + " " + ap;
   }
+  function plus2h(v) {
+    var p = v.split(":");
+    return pad((parseInt(p[0], 10) + 2) % 24) + ":" + p[1];
+  }
 
   function load() {
     var s = {};
     try { s = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { s = {}; }
     textIds.forEach(function (id) { if (typeof s[id] === "string") $(id).value = s[id]; });
     Object.keys(times).forEach(function (k) { if (s.times && typeof s.times[k] === "string") times[k] = s.times[k]; });
+    durIds.forEach(function (k) { if (s.dur && typeof s.dur[k] === "string") dur[k] = s.dur[k]; });
     if (typeof s.rounds === "number") rounds = s.rounds;
   }
   function save() {
-    var s = { rounds: rounds, times: times };
+    var s = { rounds: rounds, times: times, dur: dur };
     textIds.forEach(function (id) { s[id] = $(id).value; });
     try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
   }
 
+  function padEnd(str, n) { while (str.length < n) str += " "; return str; }
+
   function build() {
+    var seva = $("seva").value.trim().replace(/\s*\n\s*/g, ", ");
+    var rows = [
+      ["Date", fmtDate($("date").value)],
+      ["Wake up", fmtTime(times.wake)],
+      ["To bed", fmtTime(times.bed)],
+      ["Japa (No of rounds)", String(rounds)],
+      ["Japa time", fmtTime(times.jstart) + " to " + fmtTime(times.jend)],
+      ["Sravanam time", dur.sravanam],
+      ["Reading time", dur.reading],
+      ["Seva", seva],
+      ["Seva time", dur.sevatime],
+      ["Sangha time", dur.sangha]
+    ];
+    var w = 0;
+    rows.forEach(function (r) { if (r[0].length > w) w = r[0].length; });
+    var lines = rows.map(function (r) { return padEnd(r[0], w) + " : " + r[1]; });
     return [
       "Hare Kṛṣṇa",
       "Please accept my humble obeisances",
       "All glories to Śrīla Prabhupāda",
       "",
       "*Daily Sadhana Card*",
-      "Date: " + fmtDate($("date").value),
-      "Wake up: " + fmtTime(times.wake),
-      "To bed: " + fmtTime(times.bed),
-      "Japa (No of rounds): " + rounds,
-      "Japa time: " + fmtTime(times.jstart) + " to " + fmtTime(times.jend),
-      "Sravanam time: " + $("sravanam").value.trim(),
-      "Reading time: " + $("reading").value.trim(),
-      "Seva: " + $("seva").value.trim(),
-      "Seva time: " + $("sevatime").value.trim(),
-      "Sangha time: " + $("sangha").value.trim()
+      "```",
+      lines.join("\n"),
+      "```"
     ].join("\n");
   }
 
@@ -312,11 +356,20 @@
       else { b.textContent = (k === "jstart") ? "Start" : (k === "jend") ? "End" : "Set time"; b.classList.add("empty"); }
     });
   }
+  function paintChips() {
+    document.querySelectorAll(".chips").forEach(function (box) {
+      var id = box.getAttribute("data-target");
+      box.querySelectorAll(".chip").forEach(function (c) {
+        c.setAttribute("aria-pressed", c.textContent === dur[id] ? "true" : "false");
+      });
+    });
+  }
 
   function refresh() {
     $("rounds").textContent = rounds;
     $("datedisp").textContent = fmtDate($("date").value) || "Pick a date";
     paintTimes();
+    paintChips();
     var text = build();
     $("preview").textContent = text;
     var phone = $("phone").value.replace(/\D/g, "");
@@ -329,26 +382,19 @@
     setTimeout(function () { $("status").textContent = ""; }, 2500);
   }
 
-  /* duration chips */
-  var picks = ["15 min", "30 min", "45 min", "1 hr", "1.5 hr", "2 hr", "3 hr"];
+  /* duration quick-picks */
+  var picks = ["0 min", "15 min", "30 min", "45 min", "1 hr", "1.5 hr"];
   document.querySelectorAll(".chips").forEach(function (box) {
-    var target = $(box.getAttribute("data-target"));
-    function sync() {
-      box.querySelectorAll(".chip").forEach(function (c) {
-        c.setAttribute("aria-pressed", c.textContent === target.value.trim() ? "true" : "false");
-      });
-    }
+    var id = box.getAttribute("data-target");
     picks.forEach(function (p) {
       var b = document.createElement("button");
-      b.type = "button"; b.className = "chip"; b.textContent = p;
-      b.addEventListener("click", function () { target.value = p; sync(); refresh(); });
+      b.type = "button"; b.className = "chip" + (p === "0 min" ? " zero" : ""); b.textContent = p;
+      b.addEventListener("click", function () { dur[id] = (dur[id] === p) ? "" : p; refresh(); });
       box.appendChild(b);
     });
-    target.addEventListener("input", sync);
-    box._sync = sync;
   });
-  function syncAllChips() { document.querySelectorAll(".chips").forEach(function (b) { b._sync(); }); }
 
+  $("today").addEventListener("click", function () { $("date").value = todayISO(); refresh(); });
   $("minus").addEventListener("click", function () { if (rounds > 0) rounds--; refresh(); });
   $("plus").addEventListener("click", function () { rounds++; refresh(); });
 
@@ -369,10 +415,11 @@
   });
 
   $("reset").addEventListener("click", function () {
-    textIds.forEach(function (id) { if (id !== "phone") $(id).value = ""; });
+    $("seva").value = "";
     Object.keys(times).forEach(function (k) { times[k] = ""; });
-    rounds = 16; $("date").value = todayISO();
-    syncAllChips(); refresh(); flash("Cleared");
+    durIds.forEach(function (k) { dur[k] = ""; });
+    rounds = 16; endTouched = false; $("date").value = todayISO();
+    refresh(); flash("Cleared");
   });
 
   /* ---------- rotary clock picker ---------- */
@@ -393,8 +440,9 @@
     s += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="22" style="fill:var(--pc)"/>';
     var i, q, sel, label;
     for (i = 0; i < 12; i++) {
-      if (mode === "hour") { label = i === 0 ? 12 : i; sel = (label === ph); q = polar(i * 30, 104); }
-      else { label = pad(i * 5); sel = (i * 5 === pm); q = polar(i * 30, 104); }
+      q = polar(i * 30, 104);
+      if (mode === "hour") { label = i === 0 ? 12 : i; sel = (label === ph); }
+      else { label = pad(i * 5); sel = (i * 5 === pm); }
       s += '<text x="' + q[0].toFixed(1) + '" y="' + q[1].toFixed(1) + '" text-anchor="middle" dominant-baseline="central" ' +
            'font-size="18" font-weight="600" style="fill:' + (sel ? '#fff' : 'var(--ink)') + '">' + label + '</text>';
     }
@@ -416,11 +464,12 @@
 
   function openPicker(id, btn) {
     curId = id;
-    var v = times[id] || defaults[id];
+    var v = times[id] || (id === "jend" && times.jstart ? plus2h(times.jstart) : defaults[id]);
     var p = v.split(":"), h = parseInt(p[0], 10);
     ap = h >= 12 ? "PM" : "AM"; ph = h % 12 || 12; pm = parseInt(p[1], 10);
     mode = "hour";
-    sheet.style.setProperty("--pc", btn.parentNode.closest(".field").style.getPropertyValue("--c") || "#2563eb");
+    var host = btn.closest(".half") || btn.closest(".field");
+    sheet.style.setProperty("--pc", host.style.getPropertyValue("--c") || "#2563eb");
     $("sheettitle").textContent = titles[id];
     sheet.hidden = false;
     updateDisp();
@@ -443,12 +492,11 @@
     handle(e);
   });
   dial.addEventListener("pointermove", function (e) { if (dragging) handle(e); });
-  function endDrag() {
+  dial.addEventListener("pointerup", function () {
     if (!dragging) return;
     dragging = false;
     if (mode === "hour") { mode = "minute"; updateDisp(); }
-  }
-  dial.addEventListener("pointerup", endDrag);
+  });
   dial.addEventListener("pointercancel", function () { dragging = false; });
 
   $("hbtn").addEventListener("click", function () { mode = "hour"; updateDisp(); });
@@ -460,6 +508,8 @@
   $("tok").addEventListener("click", function () {
     var h24 = (ph % 12) + (ap === "PM" ? 12 : 0);
     times[curId] = pad(h24) + ":" + pad(pm);
+    if (curId === "jstart" && !endTouched) times.jend = plus2h(times.jstart);
+    if (curId === "jend") endTouched = true;
     closePicker(); refresh();
   });
   sheet.addEventListener("click", function (e) { if (e.target === sheet) closePicker(); });
@@ -472,8 +522,7 @@
   /* init */
   $("date").value = todayISO();
   load();
-  syncAllChips();
-  ["date", "sravanam", "reading", "seva", "sevatime", "sangha", "phone"].forEach(function (id) {
+  ["date", "seva", "phone"].forEach(function (id) {
     $(id).addEventListener("input", refresh);
     $(id).addEventListener("change", refresh);
   });
