@@ -10,134 +10,199 @@
     box-sizing: border-box;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    --bg: #eef2f0;
-    --surface: #ffffff;
-    --ink: #1c2a28;
-    --muted: #5d6f6c;
-    --line: #cfdad7;
-    --accent: #c9731a;
-    --accent-ink: #ffffff;
-    --chip: #e2ebe8;
-    --ok: #2e7d5b;
+    --bg1: #fff4e6; --bg2: #e8f1ff;
+    --surface: #ffffff; --input: #f6f8fc;
+    --ink: #1e2433; --muted: #66708a; --line: #dde3ef; --chip: #eef2fa;
+    --ok: #0f9d58;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #121c1b; --surface: #1b2827; --ink: #e8f0ee; --muted: #9bb0ac;
-      --line: #2e4240; --accent: #e08a2e; --accent-ink: #1a1206; --chip: #263836; --ok: #5fc395;
+      --bg1: #1d1726; --bg2: #101a2a; --surface: #1c2433; --input: #141b28;
+      --ink: #eef2fb; --muted: #9aa6c0; --line: #2e3a52; --chip: #26324a; --ok: #4ade80;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #121c1b; --surface: #1b2827; --ink: #e8f0ee; --muted: #9bb0ac;
-    --line: #2e4240; --accent: #e08a2e; --accent-ink: #1a1206; --chip: #263836; --ok: #5fc395;
+    --bg1: #1d1726; --bg2: #101a2a; --surface: #1c2433; --input: #141b28;
+    --ink: #eef2fb; --muted: #9aa6c0; --line: #2e3a52; --chip: #26324a; --ok: #4ade80;
   }
-  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); height: 100%; }
   *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   body {
-    margin: 0; background: var(--bg); color: var(--ink);
+    margin: 0; min-height: 100%; color: var(--ink);
+    background: var(--bg1);
+    background: linear-gradient(160deg, var(--bg1), var(--bg2)) fixed;
     font: 16px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
-  main { max-width: 520px; margin: 0 auto; padding: 20px 16px 40px; }
-  h1 { font: 600 28px/1.15 "Source Serif 4", Georgia, serif; margin: 4px 0 18px; }
-  .field { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
-  .field > label, .field > .lbl { display: block; font-size: 14px; color: var(--muted); margin-bottom: 6px; }
-  .row { display: flex; gap: 10px; align-items: center; }
-  .row > * { flex: 1; min-width: 0; }
-  input[type="time"], input[type="date"], input[type="text"], input[type="tel"], textarea {
-    width: 100%; font: inherit; font-size: 18px; color: var(--ink);
-    background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
-    min-height: 46px;
+  main { max-width: 420px; margin: 0 auto; padding: 16px 14px 40px; }
+  h1 {
+    font: 600 28px/1.15 "Source Serif 4", Georgia, serif; margin: 4px 0 16px; text-align: center;
+    background: linear-gradient(90deg, #ea580c, #db2777, #7c3aed, #2563eb);
+    -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
   }
-  textarea { resize: vertical; min-height: 70px; }
-  input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-  .sep { flex: 0 0 auto; color: var(--muted); }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+
+  .field {
+    background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--c);
+    border-radius: 14px; padding: 10px 12px 12px; margin-bottom: 9px; min-width: 0;
+  }
+  .head { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
+  .ico {
+    width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; font-size: 18px;
+    background: var(--chip);
+    background: color-mix(in srgb, var(--c) 16%, var(--surface));
+  }
+  .name { font-weight: 600; font-size: 15px; }
+
+  input[type="text"], input[type="tel"], textarea {
+    display: block; width: 100%; min-width: 0; font: inherit; font-size: 16px; color: var(--ink);
+    background: var(--input); border: 1.5px solid var(--line); border-radius: 10px; padding: 9px 11px; min-height: 42px;
+  }
+  textarea { resize: vertical; min-height: 64px; }
+  input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--c, #2563eb); outline-offset: 2px; }
+
+  .tbtn, .datebox {
+    display: flex; align-items: center; justify-content: center; width: 100%; min-width: 0; min-height: 46px;
+    font: 600 18px/1 inherit; color: var(--ink); padding: 8px 10px; border-radius: 10px; cursor: pointer;
+    border: 1.5px solid var(--c);
+    background: var(--input);
+    background: color-mix(in srgb, var(--c) 9%, var(--surface));
+  }
+  .tbtn.empty { color: var(--muted); font-weight: 400; }
+  .trow { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px; align-items: center; }
+  .sep { color: var(--muted); font-size: 15px; }
+  .datebox { position: relative; }
+  .datebox input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .chip {
-    font: inherit; font-size: 15px; color: var(--ink); background: var(--chip);
-    border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; min-height: 40px; cursor: pointer;
+    font: 500 14px/1 inherit; color: var(--ink); background: var(--chip);
+    border: 1px solid var(--line); border-radius: 999px; padding: 0 12px; min-height: 36px; cursor: pointer;
   }
-  .chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-  .stepper { display: flex; align-items: center; gap: 12px; }
+  .chip[aria-pressed="true"] { background: var(--c); border-color: var(--c); color: #fff; font-weight: 600; }
+
+  .stepper { display: flex; align-items: center; gap: 10px; }
   .stepper button {
-    flex: 0 0 52px; height: 52px; font-size: 28px; line-height: 1; color: var(--ink);
-    background: var(--chip); border: 1px solid var(--line); border-radius: 12px; cursor: pointer;
+    flex: 0 0 48px; height: 48px; font-size: 26px; line-height: 1; color: var(--c);
+    background: var(--chip); border: 1.5px solid var(--c); border-radius: 12px; cursor: pointer;
   }
-  .stepper output { flex: 1; text-align: center; font: 600 32px/1 "Source Serif 4", Georgia, serif; }
-  .preview-wrap { margin-top: 18px; }
+  .stepper output { flex: 1; text-align: center; font: 600 32px/1 "Source Serif 4", Georgia, serif; color: var(--c); }
+
+  .preview-wrap { margin-top: 16px; }
   .preview-wrap .lbl { font-size: 14px; color: var(--muted); margin-bottom: 6px; }
   pre#preview {
     margin: 0; white-space: pre-wrap; word-break: break-word;
-    font: 15px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
-    background: var(--surface); border: 1px dashed var(--line); border-radius: 14px; padding: 14px;
+    font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: var(--surface); border: 1.5px dashed var(--line); border-radius: 14px; padding: 12px;
   }
   .actions { display: grid; gap: 10px; margin-top: 14px; }
   .btn {
     display: flex; align-items: center; justify-content: center; text-decoration: none;
-    font: 600 18px/1 inherit; min-height: 56px; border-radius: 14px; border: 1px solid var(--line);
+    font: 600 18px/1 inherit; min-height: 54px; border-radius: 14px; border: 1.5px solid var(--line);
     background: var(--surface); color: var(--ink); cursor: pointer; width: 100%;
   }
-  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn.primary { color: #fff; border: 0; background: linear-gradient(90deg, #ea580c, #db2777, #7c3aed); }
   #status { min-height: 22px; text-align: center; color: var(--ok); font-size: 15px; margin-top: 8px; }
-  details { margin-top: 16px; color: var(--muted); font-size: 14px; }
+  details { margin-top: 14px; color: var(--muted); font-size: 14px; }
   details summary { cursor: pointer; padding: 8px 0; }
   .link-btn { background: none; border: none; color: var(--muted); font: inherit; text-decoration: underline; padding: 8px 0; cursor: pointer; }
+
+  /* time picker sheet */
+  .sheet {
+    position: fixed; inset: 0; z-index: 10; background: rgba(12, 16, 32, .55);
+    display: flex; align-items: flex-end; justify-content: center;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .sheet-card { background: var(--surface); width: 100%; max-width: 380px; border-radius: 22px 22px 0 0; padding: 14px 16px 16px; }
+  @media (min-width: 600px) { .sheet { align-items: center; } .sheet-card { border-radius: 22px; } }
+  .sheet-title { text-align: center; font-size: 14px; color: var(--muted); margin-bottom: 4px; }
+  .tdisp { display: flex; align-items: center; justify-content: center; gap: 4px; }
+  .tdisp .colon { font: 600 44px/1 "Source Serif 4", Georgia, serif; }
+  .seg {
+    font: 600 44px/1 "Source Serif 4", Georgia, serif; color: var(--ink);
+    background: transparent; border: 0; border-radius: 12px; padding: 6px 10px; cursor: pointer;
+  }
+  .seg[aria-pressed="true"] { background: var(--chip); background: color-mix(in srgb, var(--pc) 16%, var(--surface)); color: var(--pc); }
+  .ampm { display: flex; flex-direction: column; gap: 4px; margin-left: 10px; }
+  .ampm button {
+    font: 600 15px/1 inherit; color: var(--ink); background: var(--chip); border: 1.5px solid var(--line);
+    border-radius: 8px; padding: 9px 12px; cursor: pointer;
+  }
+  .ampm button[aria-pressed="true"] { background: var(--pc); border-color: var(--pc); color: #fff; }
+  #dial { display: block; width: 100%; max-width: 280px; margin: 10px auto; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .sheet-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .sheet-actions button {
+    min-height: 46px; font: 600 16px/1 inherit; border-radius: 12px; border: 1.5px solid var(--line);
+    background: var(--chip); color: var(--ink); cursor: pointer;
+  }
+  .sheet-actions .ok { background: var(--pc); border-color: var(--pc); color: #fff; }
+  .sheet button:focus-visible { outline: 3px solid var(--pc); outline-offset: 2px; }
 </style>
 </head>
 <body>
 <main>
   <h1>Daily Sadhana Card</h1>
 
-  <div class="field">
-    <label for="date">Date</label>
-    <input type="date" id="date">
-  </div>
+  <section class="field" style="--c:#2563eb">
+    <div class="head"><span class="ico">📅</span><span class="name">Date</span></div>
+    <div class="datebox"><span id="datedisp"></span><input type="date" id="date" aria-label="Date"></div>
+  </section>
 
-  <div class="field">
-    <div class="row">
-      <div><label for="bed" style="display:block;font-size:14px;color:var(--muted);margin-bottom:6px">To bed (pm)</label><input type="time" id="bed"></div>
-      <div><label for="wake" style="display:block;font-size:14px;color:var(--muted);margin-bottom:6px">Wake up (AM)</label><input type="time" id="wake"></div>
-    </div>
-  </div>
+  <section class="field" style="--c:#d97706">
+    <div class="head"><span class="ico">🌅</span><span class="name">Wake up</span></div>
+    <button type="button" class="tbtn empty" data-time="wake">Set time</button>
+  </section>
 
-  <div class="field">
-    <span class="lbl">Japa (No of Rounds)</span>
+  <section class="field" style="--c:#4f46e5">
+    <div class="head"><span class="ico">🌙</span><span class="name">To bed</span></div>
+    <button type="button" class="tbtn empty" data-time="bed">Set time</button>
+  </section>
+
+  <section class="field" style="--c:#db2777">
+    <div class="head"><span class="ico">📿</span><span class="name">Japa (No of rounds)</span></div>
     <div class="stepper">
       <button type="button" id="minus" aria-label="One round fewer">−</button>
       <output id="rounds" aria-live="polite">16</output>
       <button type="button" id="plus" aria-label="One round more">+</button>
     </div>
-  </div>
+  </section>
 
-  <div class="field">
-    <span class="lbl">Japa time</span>
-    <div class="row">
-      <input type="time" id="jstart" aria-label="Japa start">
+  <section class="field" style="--c:#7c3aed">
+    <div class="head"><span class="ico">⏰</span><span class="name">Japa time</span></div>
+    <div class="trow">
+      <button type="button" class="tbtn empty" data-time="jstart" aria-label="Japa start">Start</button>
       <span class="sep">to</span>
-      <input type="time" id="jend" aria-label="Japa end">
+      <button type="button" class="tbtn empty" data-time="jend" aria-label="Japa end">End</button>
     </div>
-  </div>
+  </section>
 
-  <div class="field">
-    <label for="sravanam">Sravanam time</label>
-    <input type="text" id="sravanam" placeholder="e.g. 30 min">
+  <section class="field" style="--c:#0891b2">
+    <div class="head"><span class="ico">🎧</span><span class="name">Sravanam time</span></div>
+    <input type="text" id="sravanam" placeholder="e.g. 30 min" aria-label="Sravanam time">
     <div class="chips" data-target="sravanam"></div>
-  </div>
+  </section>
 
-  <div class="field">
-    <label for="reading">Reading time</label>
-    <input type="text" id="reading" placeholder="e.g. 20 min">
+  <section class="field" style="--c:#059669">
+    <div class="head"><span class="ico">📖</span><span class="name">Reading time</span></div>
+    <input type="text" id="reading" placeholder="e.g. 20 min" aria-label="Reading time">
     <div class="chips" data-target="reading"></div>
-  </div>
+  </section>
 
-  <div class="field">
-    <label for="seva">Seva</label>
-    <textarea id="seva" placeholder="What seva did you do?"></textarea>
-  </div>
+  <section class="field" style="--c:#ea580c">
+    <div class="head"><span class="ico">🪔</span><span class="name">Seva</span></div>
+    <textarea id="seva" placeholder="What seva did you do?" aria-label="Seva"></textarea>
+  </section>
 
-  <div class="field">
-    <label for="sangha">Sangha time</label>
-    <input type="text" id="sangha" placeholder="e.g. 1 hr">
+  <section class="field" style="--c:#e11d48">
+    <div class="head"><span class="ico">🕐</span><span class="name">Seva time</span></div>
+    <input type="text" id="sevatime" placeholder="e.g. 1 hr" aria-label="Seva time">
+    <div class="chips" data-target="sevatime"></div>
+  </section>
+
+  <section class="field" style="--c:#0d9488">
+    <div class="head"><span class="ico">🤝</span><span class="name">Sangha time</span></div>
+    <input type="text" id="sangha" placeholder="e.g. 1 hr" aria-label="Sangha time">
     <div class="chips" data-target="sangha"></div>
-  </div>
+  </section>
 
   <div class="preview-wrap">
     <div class="lbl">Message preview</div>
@@ -152,69 +217,106 @@
 
   <details>
     <summary>Settings</summary>
-    <div class="field">
-      <label for="phone">WhatsApp number (optional, opens that chat directly)</label>
-      <input type="tel" id="phone" inputmode="tel" placeholder="Country code + number, e.g. 15551234567">
-    </div>
+    <section class="field" style="--c:#2563eb">
+      <div class="head"><span class="name">WhatsApp number (optional, opens that chat directly)</span></div>
+      <input type="tel" id="phone" inputmode="tel" placeholder="Country code + number, e.g. 15551234567" aria-label="WhatsApp number">
+    </section>
     <button type="button" class="link-btn" id="reset">Clear all fields</button>
   </details>
 </main>
 
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-label="Pick a time">
+    <div class="sheet-title" id="sheettitle">Set time</div>
+    <div class="tdisp">
+      <button type="button" class="seg" id="hbtn" aria-label="Hour">5</button>
+      <span class="colon">:</span>
+      <button type="button" class="seg" id="mbtn" aria-label="Minute">00</button>
+      <div class="ampm">
+        <button type="button" id="am">AM</button>
+        <button type="button" id="pm">PM</button>
+      </div>
+    </div>
+    <svg id="dial" viewBox="0 0 280 280" role="img" aria-label="Clock dial. Drag to choose."></svg>
+    <div class="sheet-actions">
+      <button type="button" id="tclear">Clear</button>
+      <button type="button" id="tcancel">Cancel</button>
+      <button type="button" class="ok" id="tok">OK</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function () {
-  var KEY = "sadhana-card-v1";
+  var KEY = "sadhana-card-v2";
   var $ = function (id) { return document.getElementById(id); };
-  var textIds = ["bed", "wake", "jstart", "jend", "sravanam", "reading", "seva", "sangha", "phone"];
+  var textIds = ["sravanam", "reading", "seva", "sevatime", "sangha", "phone"];
+  var times = { wake: "", bed: "", jstart: "", jend: "" };
+  var defaults = { wake: "05:00", bed: "22:00", jstart: "05:30", jend: "08:00" };
+  var titles = { wake: "Wake up", bed: "To bed", jstart: "Japa start", jend: "Japa end" };
   var rounds = 16;
+  var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   function pad(n) { return n < 10 ? "0" + n : "" + n; }
-  function todayISO() {
-    var d = new Date();
-    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
-  }
+  function todayISO() { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
   function fmtDate(iso) {
     if (!iso) return "";
     var p = iso.split("-");
-    return p[1] + "/" + p[2] + "/" + p[0];
+    return MONTHS[parseInt(p[1], 10) - 1] + " " + parseInt(p[2], 10) + ", " + p[0];
   }
   function fmtTime(v) {
     if (!v) return "";
-    var p = v.split(":");
-    var h = parseInt(p[0], 10), m = p[1];
+    var p = v.split(":"), h = parseInt(p[0], 10);
     var ap = h >= 12 ? "PM" : "AM";
     h = h % 12; if (h === 0) h = 12;
-    return h + ":" + m + " " + ap;
+    return h + ":" + p[1] + " " + ap;
   }
 
   function load() {
     var s = {};
     try { s = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { s = {}; }
-    textIds.forEach(function (id) { if (s[id] != null) $(id).value = s[id]; });
+    textIds.forEach(function (id) { if (typeof s[id] === "string") $(id).value = s[id]; });
+    Object.keys(times).forEach(function (k) { if (s.times && typeof s.times[k] === "string") times[k] = s.times[k]; });
     if (typeof s.rounds === "number") rounds = s.rounds;
   }
   function save() {
-    var s = { rounds: rounds };
+    var s = { rounds: rounds, times: times };
     textIds.forEach(function (id) { s[id] = $(id).value; });
     try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
   }
 
   function build() {
     return [
+      "Hare Kṛṣṇa",
+      "Please accept my humble obeisances",
+      "All glories to Śrīla Prabhupāda",
+      "",
       "*Daily Sadhana Card*",
       "Date: " + fmtDate($("date").value),
-      "To bed: " + fmtTime($("bed").value),
-      "Wake up: " + fmtTime($("wake").value),
-      "Japa (No of Rounds): " + rounds,
-      "Japa time: " + fmtTime($("jstart").value) + " to " + fmtTime($("jend").value),
+      "Wake up: " + fmtTime(times.wake),
+      "To bed: " + fmtTime(times.bed),
+      "Japa (No of rounds): " + rounds,
+      "Japa time: " + fmtTime(times.jstart) + " to " + fmtTime(times.jend),
       "Sravanam time: " + $("sravanam").value.trim(),
       "Reading time: " + $("reading").value.trim(),
       "Seva: " + $("seva").value.trim(),
-      "Sangha Time: " + $("sangha").value.trim()
+      "Seva time: " + $("sevatime").value.trim(),
+      "Sangha time: " + $("sangha").value.trim()
     ].join("\n");
+  }
+
+  function paintTimes() {
+    document.querySelectorAll(".tbtn").forEach(function (b) {
+      var k = b.getAttribute("data-time"), v = times[k];
+      if (v) { b.textContent = fmtTime(v); b.classList.remove("empty"); }
+      else { b.textContent = (k === "jstart") ? "Start" : (k === "jend") ? "End" : "Set time"; b.classList.add("empty"); }
+    });
   }
 
   function refresh() {
     $("rounds").textContent = rounds;
+    $("datedisp").textContent = fmtDate($("date").value) || "Pick a date";
+    paintTimes();
     var text = build();
     $("preview").textContent = text;
     var phone = $("phone").value.replace(/\D/g, "");
@@ -227,10 +329,15 @@
     setTimeout(function () { $("status").textContent = ""; }, 2500);
   }
 
-  // Quick-pick chips for duration fields
-  var picks = ["15 min", "30 min", "45 min", "1 hr", "1.5 hr"];
+  /* duration chips */
+  var picks = ["15 min", "30 min", "45 min", "1 hr", "1.5 hr", "2 hr", "3 hr"];
   document.querySelectorAll(".chips").forEach(function (box) {
     var target = $(box.getAttribute("data-target"));
+    function sync() {
+      box.querySelectorAll(".chip").forEach(function (c) {
+        c.setAttribute("aria-pressed", c.textContent === target.value.trim() ? "true" : "false");
+      });
+    }
     picks.forEach(function (p) {
       var b = document.createElement("button");
       b.type = "button"; b.className = "chip"; b.textContent = p;
@@ -238,11 +345,6 @@
       box.appendChild(b);
     });
     target.addEventListener("input", sync);
-    function sync() {
-      box.querySelectorAll(".chip").forEach(function (c) {
-        c.setAttribute("aria-pressed", c.textContent === target.value.trim() ? "true" : "false");
-      });
-    }
     box._sync = sync;
   });
   function syncAllChips() { document.querySelectorAll(".chips").forEach(function (b) { b._sync(); }); }
@@ -268,16 +370,112 @@
 
   $("reset").addEventListener("click", function () {
     textIds.forEach(function (id) { if (id !== "phone") $(id).value = ""; });
+    Object.keys(times).forEach(function (k) { times[k] = ""; });
     rounds = 16; $("date").value = todayISO();
     syncAllChips(); refresh(); flash("Cleared");
   });
 
+  /* ---------- rotary clock picker ---------- */
+  var sheet = $("sheet"), dial = $("dial");
+  var curId = null, mode = "hour", ph = 12, pm = 0, ap = "AM", dragging = false;
+
+  function polar(angle, r) {
+    var a = angle * Math.PI / 180;
+    return [140 + r * Math.sin(a), 140 - r * Math.cos(a)];
+  }
+
+  function renderDial() {
+    var ang = mode === "hour" ? (ph % 12) * 30 : pm * 6;
+    var p = polar(ang, 104);
+    var s = '<circle cx="140" cy="140" r="134" style="fill:var(--chip)"/>';
+    s += '<line x1="140" y1="140" x2="' + p[0].toFixed(1) + '" y2="' + p[1].toFixed(1) + '" style="stroke:var(--pc)" stroke-width="3"/>';
+    s += '<circle cx="140" cy="140" r="5" style="fill:var(--pc)"/>';
+    s += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="22" style="fill:var(--pc)"/>';
+    var i, q, sel, label;
+    for (i = 0; i < 12; i++) {
+      if (mode === "hour") { label = i === 0 ? 12 : i; sel = (label === ph); q = polar(i * 30, 104); }
+      else { label = pad(i * 5); sel = (i * 5 === pm); q = polar(i * 30, 104); }
+      s += '<text x="' + q[0].toFixed(1) + '" y="' + q[1].toFixed(1) + '" text-anchor="middle" dominant-baseline="central" ' +
+           'font-size="18" font-weight="600" style="fill:' + (sel ? '#fff' : 'var(--ink)') + '">' + label + '</text>';
+    }
+    if (mode === "minute" && pm % 5 !== 0) {
+      s += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="3.5" style="fill:#fff"/>';
+    }
+    dial.innerHTML = s;
+  }
+
+  function updateDisp() {
+    $("hbtn").textContent = ph;
+    $("mbtn").textContent = pad(pm);
+    $("hbtn").setAttribute("aria-pressed", mode === "hour" ? "true" : "false");
+    $("mbtn").setAttribute("aria-pressed", mode === "minute" ? "true" : "false");
+    $("am").setAttribute("aria-pressed", ap === "AM" ? "true" : "false");
+    $("pm").setAttribute("aria-pressed", ap === "PM" ? "true" : "false");
+    renderDial();
+  }
+
+  function openPicker(id, btn) {
+    curId = id;
+    var v = times[id] || defaults[id];
+    var p = v.split(":"), h = parseInt(p[0], 10);
+    ap = h >= 12 ? "PM" : "AM"; ph = h % 12 || 12; pm = parseInt(p[1], 10);
+    mode = "hour";
+    sheet.style.setProperty("--pc", btn.parentNode.closest(".field").style.getPropertyValue("--c") || "#2563eb");
+    $("sheettitle").textContent = titles[id];
+    sheet.hidden = false;
+    updateDisp();
+    $("tok").focus();
+  }
+  function closePicker() { sheet.hidden = true; curId = null; dragging = false; }
+
+  function handle(e) {
+    var r = dial.getBoundingClientRect();
+    var dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+    var a = Math.atan2(dx, -dy) * 180 / Math.PI;
+    if (a < 0) a += 360;
+    if (mode === "hour") { var h = Math.round(a / 30) % 12; ph = h === 0 ? 12 : h; }
+    else { pm = Math.round(a / 6) % 60; }
+    updateDisp();
+  }
+  dial.addEventListener("pointerdown", function (e) {
+    dragging = true;
+    try { dial.setPointerCapture(e.pointerId); } catch (x) {}
+    handle(e);
+  });
+  dial.addEventListener("pointermove", function (e) { if (dragging) handle(e); });
+  function endDrag() {
+    if (!dragging) return;
+    dragging = false;
+    if (mode === "hour") { mode = "minute"; updateDisp(); }
+  }
+  dial.addEventListener("pointerup", endDrag);
+  dial.addEventListener("pointercancel", function () { dragging = false; });
+
+  $("hbtn").addEventListener("click", function () { mode = "hour"; updateDisp(); });
+  $("mbtn").addEventListener("click", function () { mode = "minute"; updateDisp(); });
+  $("am").addEventListener("click", function () { ap = "AM"; updateDisp(); });
+  $("pm").addEventListener("click", function () { ap = "PM"; updateDisp(); });
+  $("tcancel").addEventListener("click", closePicker);
+  $("tclear").addEventListener("click", function () { times[curId] = ""; closePicker(); refresh(); });
+  $("tok").addEventListener("click", function () {
+    var h24 = (ph % 12) + (ap === "PM" ? 12 : 0);
+    times[curId] = pad(h24) + ":" + pad(pm);
+    closePicker(); refresh();
+  });
+  sheet.addEventListener("click", function (e) { if (e.target === sheet) closePicker(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !sheet.hidden) closePicker(); });
+
+  document.querySelectorAll(".tbtn").forEach(function (b) {
+    b.addEventListener("click", function () { openPicker(b.getAttribute("data-time"), b); });
+  });
+
+  /* init */
   $("date").value = todayISO();
   load();
   syncAllChips();
-  document.querySelectorAll("input, textarea").forEach(function (el) {
-    el.addEventListener("input", function () { syncAllChips(); refresh(); });
-    el.addEventListener("change", refresh);
+  ["date", "sravanam", "reading", "seva", "sevatime", "sangha", "phone"].forEach(function (id) {
+    $(id).addEventListener("input", refresh);
+    $(id).addEventListener("change", refresh);
   });
   refresh();
 })();
