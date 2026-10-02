@@ -67,7 +67,11 @@
   .half { padding: 8px 10px 10px; border-left: 5px solid var(--c); min-width: 0; }
 
   .japarow { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 8px; margin-bottom: 8px; }
-  .japarow .field { margin-bottom: 0; }
+  .japarow .field { margin-bottom: 0; padding: 6px 10px 8px; }
+  .japarow .head { margin-bottom: 4px; }
+  .japarow .ico { width: 28px; height: 28px; font-size: 16px; }
+  .japarow .stepper button { flex: 0 0 38px; height: 38px; font-size: 22px; }
+  .japarow .stepper output { font-size: 26px; }
 
   input[type="text"], input[type="tel"], textarea {
     display: block; width: 100%; min-width: 0; font: inherit; font-size: 16px; color: var(--ink);
@@ -121,11 +125,11 @@
   .stepper output { flex: 1; text-align: center; font: 600 30px/1 "Source Serif 4", Georgia, serif; color: var(--c); }
 
   .score { display: flex; align-items: baseline; gap: 6px; margin-top: 2px; }
-  #scorenum { font: 600 34px/1.1 "Source Serif 4", Georgia, serif; color: var(--muted); }
+  #scorenum { font: 600 28px/1.1 "Source Serif 4", Georgia, serif; color: var(--muted); }
   #scorenum.pos { color: var(--ok); }
   #scorenum.neg { color: var(--bad); }
   .pts { font-size: 16px; color: var(--muted); }
-  .hint { margin-top: 2px; font-size: 15px; line-height: 1.25; color: var(--muted); }
+  .hint { margin-top: 1px; font-size: 15px; line-height: 1.2; color: var(--muted); white-space: nowrap; }
 
   .preview-wrap { margin-top: 14px; }
   .preview-wrap .lbl { font-size: 16px; color: var(--muted); margin-bottom: 6px; }
@@ -224,7 +228,7 @@
     <section class="field" style="--c:#ca8a04">
       <div class="head"><span class="ico">⭐</span><span class="name">Japa score</span></div>
       <div class="score"><span id="scorenum">—</span><span class="pts" id="scorepts" hidden>pts</span></div>
-      <div class="hint" id="scorehint">Set finish time</div>
+      <div class="hint" id="scorehint">Set 🏁 time</div>
     </section>
   </div>
 
@@ -395,18 +399,18 @@
     var num = $("scorenum"), pts = $("scorepts"), hint = $("scorehint");
     num.className = "";
     if (!times.jend) {
-      num.textContent = "—"; pts.hidden = true; hint.textContent = "Set finish time";
+      num.textContent = "—"; pts.hidden = true; hint.textContent = "Set 🏁 time";
       return;
     }
     var e = toMin(times.jend);
     if (times.jstart && e < toMin(times.jstart)) e += 1440;  // finished after midnight
     var sc, why;
-    if (e > 21 * 60) { sc = -5; why = "Finished after 9 PM"; }
-    else if (e < 7 * 60) { sc = 5; why = "Finished before 7 AM"; }
-    else if (e < 12 * 60) { sc = 4; why = "Finished before noon"; }
-    else if (e < 16 * 60) { sc = 3; why = "Finished before 4 PM"; }
-    else if (e < 18 * 60) { sc = 2; why = "Finished before 6 PM"; }
-    else { sc = 0; why = "Finished 6 to 9 PM"; }
+    if (e > 21 * 60) { sc = -5; why = "🏁 after 9 PM"; }
+    else if (e < 7 * 60) { sc = 5; why = "🏁 before 7 AM"; }
+    else if (e < 12 * 60) { sc = 4; why = "🏁 before noon"; }
+    else if (e < 16 * 60) { sc = 3; why = "🏁 before 4 PM"; }
+    else if (e < 18 * 60) { sc = 2; why = "🏁 before 6 PM"; }
+    else { sc = 0; why = "🏁 6 to 9 PM"; }
     num.textContent = (sc > 0 ? "+" : sc < 0 ? "−" : "") + Math.abs(sc);
     num.className = sc > 0 ? "pos" : sc < 0 ? "neg" : "";
     pts.hidden = false;
