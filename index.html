@@ -13,18 +13,18 @@
     --bg1: #fff4e6; --bg2: #e8f1ff;
     --surface: #ffffff; --input: #f6f8fc;
     --ink: #1e2433; --muted: #66708a; --line: #dde3ef; --chip: #eef2fa;
-    --ok: #0f9d58; --zero: #475569; --zero-ink: #ffffff;
+    --ok: #0f9d58; --bad: #dc2626; --zero: #475569; --zero-ink: #ffffff;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg1: #1d1726; --bg2: #101a2a; --surface: #1c2433; --input: #141b28;
-      --ink: #eef2fb; --muted: #9aa6c0; --line: #2e3a52; --chip: #26324a; --ok: #4ade80;
+      --ink: #eef2fb; --muted: #9aa6c0; --line: #2e3a52; --chip: #26324a; --ok: #4ade80; --bad: #f87171;
       --zero: #94a3b8; --zero-ink: #0f172a;
     }
   }
   :root[data-theme="dark"] {
     --bg1: #1d1726; --bg2: #101a2a; --surface: #1c2433; --input: #141b28;
-    --ink: #eef2fb; --muted: #9aa6c0; --line: #2e3a52; --chip: #26324a; --ok: #4ade80;
+    --ink: #eef2fb; --muted: #9aa6c0; --line: #2e3a52; --chip: #26324a; --ok: #4ade80; --bad: #f87171;
     --zero: #94a3b8; --zero-ink: #0f172a;
   }
   html { scroll-padding-top: env(safe-area-inset-top, 0px); height: 100%; }
@@ -56,17 +56,18 @@
   }
   .name { font-weight: 600; font-size: 16px; line-height: 1.2; }
 
-  /* row tile: label column left, controls right */
   .rt { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; align-items: center; }
   .lab { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
   .rc { min-width: 0; }
 
-  /* merged wake / bed tile */
   .pair {
     display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     background: var(--surface); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 8px; overflow: hidden;
   }
   .half { padding: 8px 10px 10px; border-left: 5px solid var(--c); min-width: 0; }
+
+  .japarow { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 8px; margin-bottom: 8px; }
+  .japarow .field { margin-bottom: 0; }
 
   input[type="text"], input[type="tel"], textarea {
     display: block; width: 100%; min-width: 0; font: inherit; font-size: 16px; color: var(--ink);
@@ -86,6 +87,7 @@
   .tbtn.empty { color: var(--muted); font-weight: 400; }
   .trow { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 6px; align-items: center; }
   .sep { color: var(--muted); font-size: 16px; }
+  .jdur { margin-top: 6px; font-size: 15px; font-weight: 600; color: var(--c); text-align: center; }
   .datebox { position: relative; font-size: 16px; }
   .datebox input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; }
   .daterow { display: flex; gap: 8px; align-items: stretch; }
@@ -104,13 +106,26 @@
   .chip[aria-pressed="true"] { background: var(--c); border-color: var(--c); color: #fff; font-weight: 600; }
   .chip.zero { color: var(--zero); border: 1.5px solid var(--zero); background: var(--chip); background: color-mix(in srgb, var(--zero) 10%, var(--surface)); }
   .chip.zero[aria-pressed="true"] { background: var(--zero); border-color: var(--zero); color: var(--zero-ink); }
+  .chips input.chipin {
+    display: block; width: 100%; min-width: 0; min-height: 38px; padding: 0 8px; font-size: 16px; font-family: inherit;
+    text-align: center; color: var(--ink); background: var(--input); border: 1px solid var(--line); border-radius: 999px;
+  }
+  .chips input.chipin::placeholder { color: var(--muted); opacity: 1; }
+  .chips input.chipin.has { border: 1.5px solid var(--c); font-weight: 600; background: var(--chip); background: color-mix(in srgb, var(--c) 12%, var(--surface)); }
 
-  .stepper { display: flex; align-items: center; gap: 8px; }
+  .stepper { display: flex; align-items: center; gap: 6px; }
   .stepper button {
-    flex: 0 0 46px; height: 46px; font-size: 26px; line-height: 1; color: var(--c);
+    flex: 0 0 44px; height: 44px; font-size: 26px; line-height: 1; color: var(--c);
     background: var(--chip); border: 1.5px solid var(--c); border-radius: 12px; cursor: pointer;
   }
-  .stepper output { flex: 1; text-align: center; font: 600 32px/1 "Source Serif 4", Georgia, serif; color: var(--c); }
+  .stepper output { flex: 1; text-align: center; font: 600 30px/1 "Source Serif 4", Georgia, serif; color: var(--c); }
+
+  .score { display: flex; align-items: baseline; gap: 6px; margin-top: 2px; }
+  #scorenum { font: 600 34px/1.1 "Source Serif 4", Georgia, serif; color: var(--muted); }
+  #scorenum.pos { color: var(--ok); }
+  #scorenum.neg { color: var(--bad); }
+  .pts { font-size: 16px; color: var(--muted); }
+  .hint { margin-top: 2px; font-size: 15px; line-height: 1.25; color: var(--muted); }
 
   .preview-wrap { margin-top: 14px; }
   .preview-wrap .lbl { font-size: 16px; color: var(--muted); margin-bottom: 6px; }
@@ -131,7 +146,6 @@
   details summary { cursor: pointer; padding: 8px 0; }
   .link-btn { background: none; border: none; color: var(--muted); font: inherit; font-size: 16px; text-decoration: underline; padding: 8px 0; cursor: pointer; }
 
-  /* time picker sheet */
   .sheet {
     position: fixed; inset: 0; z-index: 10; background: rgba(12, 16, 32, .55);
     display: flex; align-items: flex-end; justify-content: center;
@@ -186,23 +200,33 @@
     </section>
   </div>
 
-  <section class="field rt" style="--c:#db2777">
-    <div class="lab"><span class="ico">📿</span><span class="name">Japa (No of rounds)</span></div>
-    <div class="rc stepper">
-      <button type="button" id="minus" aria-label="One round fewer">−</button>
-      <output id="rounds" aria-live="polite">16</output>
-      <button type="button" id="plus" aria-label="One round more">+</button>
+  <section class="field rt" style="--c:#7c3aed">
+    <div class="lab"><span class="ico">🧘</span><span class="name">Japa time</span></div>
+    <div class="rc">
+      <div class="trow">
+        <button type="button" class="tbtn empty" data-time="jstart" aria-label="Japa start">Start</button>
+        <span class="sep">to</span>
+        <button type="button" class="tbtn empty" data-time="jend" aria-label="Japa end" style="--c:#65a30d">End</button>
+      </div>
+      <div class="jdur" id="jdur" hidden></div>
     </div>
   </section>
 
-  <section class="field rt" style="--c:#7c3aed">
-    <div class="lab"><span class="ico">⏰</span><span class="name">Japa time</span></div>
-    <div class="rc trow">
-      <button type="button" class="tbtn empty" data-time="jstart" aria-label="Japa start">Start</button>
-      <span class="sep">to</span>
-      <button type="button" class="tbtn empty" data-time="jend" aria-label="Japa end">End</button>
-    </div>
-  </section>
+  <div class="japarow">
+    <section class="field" style="--c:#db2777">
+      <div class="head"><span class="ico">📿</span><span class="name">Japa (No of rounds)</span></div>
+      <div class="stepper">
+        <button type="button" id="minus" aria-label="One round fewer">−</button>
+        <output id="rounds" aria-live="polite">16</output>
+        <button type="button" id="plus" aria-label="One round more">+</button>
+      </div>
+    </section>
+    <section class="field" style="--c:#ca8a04">
+      <div class="head"><span class="ico">⭐</span><span class="name">Japa score</span></div>
+      <div class="score"><span id="scorenum">—</span><span class="pts" id="scorepts" hidden>pts</span></div>
+      <div class="hint" id="scorehint">Set finish time</div>
+    </section>
+  </div>
 
   <section class="field rt" style="--c:#0891b2">
     <div class="lab"><span class="ico">🎧</span><span class="name">Sravanam time</span></div>
@@ -277,13 +301,15 @@
   var $ = function (id) { return document.getElementById(id); };
   var textIds = ["seva", "phone"];
   var durIds = ["sravanam", "reading", "sevatime", "sangha"];
+  var durLabels = { sravanam: "Sravanam", reading: "Reading", sevatime: "Seva", sangha: "Sangha" };
   var times = { wake: "", bed: "", jstart: "", jend: "" };
   var dur = { sravanam: "", reading: "", sevatime: "", sangha: "" };
   var defaults = { wake: "05:00", bed: "22:00", jstart: "05:30", jend: "08:00" };
-  var titles = { wake: "Wake up", bed: "To bed", jstart: "Japa start", jend: "Japa end" };
+  var titles = { wake: "Wake up", bed: "To bed", jstart: "Japa start", jend: "Japa finish" };
   var rounds = 16;
-  var endTouched = false;
+  var startTouched = false, endTouched = false;
   var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  var PRESETS = ["15 min", "30 min", "45 min", "1 hr", "0 min"];
 
   function pad(n) { return n < 10 ? "0" + n : "" + n; }
   function todayISO() { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
@@ -299,9 +325,10 @@
     h = h % 12; if (h === 0) h = 12;
     return h + ":" + p[1] + " " + ap;
   }
-  function plus2h(v) {
-    var p = v.split(":");
-    return pad((parseInt(p[0], 10) + 2) % 24) + ":" + p[1];
+  function toMin(v) { var p = v.split(":"); return parseInt(p[0], 10) * 60 + parseInt(p[1], 10); }
+  function plusMin(v, m) {
+    var t = (toMin(v) + m) % 1440;
+    return pad(Math.floor(t / 60)) + ":" + pad(t % 60);
   }
 
   function load() {
@@ -323,20 +350,21 @@
   function build() {
     var seva = $("seva").value.trim().replace(/\s*\n\s*/g, ", ");
     var rows = [
-      ["Date", fmtDate($("date").value)],
-      ["Wake up", fmtTime(times.wake)],
-      ["To bed", fmtTime(times.bed)],
-      ["Japa (No of rounds)", String(rounds)],
-      ["Japa time", fmtTime(times.jstart) + " to " + fmtTime(times.jend)],
-      ["Sravanam time", dur.sravanam],
-      ["Reading time", dur.reading],
-      ["Seva", seva],
-      ["Seva time", dur.sevatime],
-      ["Sangha time", dur.sangha]
+      ["Date", "📅", fmtDate($("date").value)],
+      ["Wake up", "🌅", fmtTime(times.wake)],
+      ["To bed", "🌙", fmtTime(times.bed)],
+      ["Japa (No of rounds)", "📿", String(rounds)],
+      ["Japa start", "🧘", fmtTime(times.jstart)],
+      ["Japa finish", "🏁", fmtTime(times.jend)],
+      ["Sravanam time", "🎧", dur.sravanam],
+      ["Reading time", "📖", dur.reading],
+      ["Seva", "🪔", seva],
+      ["Seva time", "🕐", dur.sevatime],
+      ["Sangha time", "🤝", dur.sangha]
     ];
     var w = 0;
     rows.forEach(function (r) { if (r[0].length > w) w = r[0].length; });
-    var lines = rows.map(function (r) { return padEnd(r[0], w) + " : " + r[1]; });
+    var lines = rows.map(function (r) { return padEnd(r[0], w) + " " + r[1] + ": " + r[2]; });
     return [
       "Hare Kṛṣṇa",
       "Please accept my humble obeisances",
@@ -347,6 +375,42 @@
       lines.join("\n"),
       "```"
     ].join("\n");
+  }
+
+  /* japa duration + score (shown in the page only, not in the message) */
+  function fmtDur(mins) {
+    var h = Math.floor(mins / 60), m = mins % 60, out = [];
+    if (h) out.push(h + " hr");
+    if (m || !h) out.push(m + " min");
+    return out.join(" ");
+  }
+  function paintJapa() {
+    var d = $("jdur");
+    if (times.jstart && times.jend) {
+      var mins = (toMin(times.jend) - toMin(times.jstart) + 1440) % 1440;
+      d.textContent = "Japa duration: " + fmtDur(mins);
+      d.hidden = false;
+    } else { d.hidden = true; }
+
+    var num = $("scorenum"), pts = $("scorepts"), hint = $("scorehint");
+    num.className = "";
+    if (!times.jend) {
+      num.textContent = "—"; pts.hidden = true; hint.textContent = "Set finish time";
+      return;
+    }
+    var e = toMin(times.jend);
+    if (times.jstart && e < toMin(times.jstart)) e += 1440;  // finished after midnight
+    var sc, why;
+    if (e > 21 * 60) { sc = -5; why = "Finished after 9 PM"; }
+    else if (e < 7 * 60) { sc = 5; why = "Finished before 7 AM"; }
+    else if (e < 12 * 60) { sc = 4; why = "Finished before noon"; }
+    else if (e < 16 * 60) { sc = 3; why = "Finished before 4 PM"; }
+    else if (e < 18 * 60) { sc = 2; why = "Finished before 6 PM"; }
+    else { sc = 0; why = "Finished 6 to 9 PM"; }
+    num.textContent = (sc > 0 ? "+" : sc < 0 ? "−" : "") + Math.abs(sc);
+    num.className = sc > 0 ? "pos" : sc < 0 ? "neg" : "";
+    pts.hidden = false;
+    hint.textContent = why;
   }
 
   function paintTimes() {
@@ -362,6 +426,9 @@
       box.querySelectorAll(".chip").forEach(function (c) {
         c.setAttribute("aria-pressed", c.textContent === dur[id] ? "true" : "false");
       });
+      var inp = box._inp;
+      if (document.activeElement !== inp) inp.value = PRESETS.indexOf(dur[id]) > -1 ? "" : dur[id];
+      inp.classList.toggle("has", inp.value.trim() !== "");
     });
   }
 
@@ -370,6 +437,7 @@
     $("datedisp").textContent = fmtDate($("date").value) || "Pick a date";
     paintTimes();
     paintChips();
+    paintJapa();
     var text = build();
     $("preview").textContent = text;
     var phone = $("phone").value.replace(/\D/g, "");
@@ -382,16 +450,26 @@
     setTimeout(function () { $("status").textContent = ""; }, 2500);
   }
 
-  /* duration quick-picks */
-  var picks = ["0 min", "15 min", "30 min", "45 min", "1 hr", "1.5 hr"];
+  /* duration quick-picks: 15 / 30 / 45, then 1 hr / 0 min / free text */
   document.querySelectorAll(".chips").forEach(function (box) {
     var id = box.getAttribute("data-target");
-    picks.forEach(function (p) {
+    var inp = document.createElement("input");
+    inp.type = "text"; inp.className = "chipin"; inp.placeholder = "Other";
+    inp.setAttribute("aria-label", durLabels[id] + " time, other value");
+    inp.addEventListener("input", function () { dur[id] = inp.value.trim(); refresh(); });
+    inp.addEventListener("blur", refresh);
+    PRESETS.forEach(function (p) {
       var b = document.createElement("button");
       b.type = "button"; b.className = "chip" + (p === "0 min" ? " zero" : ""); b.textContent = p;
-      b.addEventListener("click", function () { dur[id] = (dur[id] === p) ? "" : p; refresh(); });
+      b.addEventListener("click", function () {
+        inp.value = ""; inp.blur();
+        dur[id] = (dur[id] === p) ? "" : p;
+        refresh();
+      });
       box.appendChild(b);
     });
+    box.appendChild(inp);
+    box._inp = inp;
   });
 
   $("today").addEventListener("click", function () { $("date").value = todayISO(); refresh(); });
@@ -418,7 +496,7 @@
     $("seva").value = "";
     Object.keys(times).forEach(function (k) { times[k] = ""; });
     durIds.forEach(function (k) { dur[k] = ""; });
-    rounds = 16; endTouched = false; $("date").value = todayISO();
+    rounds = 16; startTouched = false; endTouched = false; $("date").value = todayISO();
     refresh(); flash("Cleared");
   });
 
@@ -462,14 +540,21 @@
     renderDial();
   }
 
+  function defaultFor(id) {
+    if (id === "jstart" && times.wake) return plusMin(times.wake, 30);
+    if (id === "jend" && times.jstart) return plusMin(times.jstart, 120);
+    return defaults[id];
+  }
+
   function openPicker(id, btn) {
     curId = id;
-    var v = times[id] || (id === "jend" && times.jstart ? plus2h(times.jstart) : defaults[id]);
+    var v = times[id] || defaultFor(id);
     var p = v.split(":"), h = parseInt(p[0], 10);
     ap = h >= 12 ? "PM" : "AM"; ph = h % 12 || 12; pm = parseInt(p[1], 10);
     mode = "hour";
     var host = btn.closest(".half") || btn.closest(".field");
-    sheet.style.setProperty("--pc", host.style.getPropertyValue("--c") || "#2563eb");
+    var col = (btn.style.getPropertyValue("--c") || host.style.getPropertyValue("--c") || "#2563eb").trim();
+    sheet.style.setProperty("--pc", col);
     $("sheettitle").textContent = titles[id];
     sheet.hidden = false;
     updateDisp();
@@ -508,7 +593,14 @@
   $("tok").addEventListener("click", function () {
     var h24 = (ph % 12) + (ap === "PM" ? 12 : 0);
     times[curId] = pad(h24) + ":" + pad(pm);
-    if (curId === "jstart" && !endTouched) times.jend = plus2h(times.jstart);
+    if (curId === "wake" && !startTouched) {
+      times.jstart = plusMin(times.wake, 30);
+      if (!endTouched) times.jend = plusMin(times.jstart, 120);
+    }
+    if (curId === "jstart") {
+      startTouched = true;
+      if (!endTouched) times.jend = plusMin(times.jstart, 120);
+    }
     if (curId === "jend") endTouched = true;
     closePicker(); refresh();
   });
