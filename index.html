@@ -218,7 +218,7 @@
 
   <div class="japarow">
     <section class="field" style="--c:#db2777">
-      <div class="head"><span class="ico">📿</span><span class="name">Japa (No of rounds)</span></div>
+      <div class="head"><span class="ico">📿</span><span class="name">Japa rounds</span></div>
       <div class="stepper">
         <button type="button" id="minus" aria-label="One round fewer">−</button>
         <output id="rounds" aria-live="polite">16</output>
@@ -312,7 +312,7 @@
   var titles = { wake: "Wake up", bed: "To bed", jstart: "Japa start", jend: "Japa finish" };
   var rounds = 16;
   var startTouched = false, endTouched = false;
-  var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   var PRESETS = ["15 min", "30 min", "45 min", "1 hr", "0 min"];
 
   function pad(n) { return n < 10 ? "0" + n : "" + n; }
@@ -357,7 +357,7 @@
       ["Date", "📅", fmtDate($("date").value)],
       ["Wake up", "🌅", fmtTime(times.wake)],
       ["To bed", "🌙", fmtTime(times.bed)],
-      ["Japa (No of rounds)", "📿", String(rounds)],
+      ["Japa rounds", "📿", String(rounds)],
       ["Japa start", "🧘", fmtTime(times.jstart)],
       ["Japa finish", "🏁", fmtTime(times.jend)],
       ["Sravanam time", "🎧", dur.sravanam],
