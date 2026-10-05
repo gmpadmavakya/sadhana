@@ -66,6 +66,7 @@
   }
   .half { padding: 8px 10px 10px; border-left: 5px solid var(--c); min-width: 0; }
 
+  .rest { grid-column: 1 / -1; text-align: center; font-size: 15px; font-weight: 600; padding: 6px 10px 7px; border-top: 1px solid var(--line); }
   .japarow { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 8px; margin-bottom: 8px; }
   .japarow .field { margin-bottom: 0; padding: 6px 10px 8px; }
   .japarow .head { margin-bottom: 4px; }
@@ -202,6 +203,7 @@
       <div class="head"><span class="ico">🌅</span><span class="name">Wake up</span></div>
       <button type="button" class="tbtn empty" data-time="wake">Set time</button>
     </section>
+    <div class="rest" id="rest" hidden></div>
   </div>
 
   <section class="field rt" style="--c:#7c3aed">
@@ -389,6 +391,14 @@
     return out.join(" ");
   }
   function paintJapa() {
+    var r = $("rest");
+    if (times.bed && times.wake) {
+      var rm = (toMin(times.wake) - toMin(times.bed) + 1440) % 1440;
+      var hrs = Math.round(rm / 6) / 10;  // hours, one decimal
+      r.textContent = "Rest time: " + hrs + (hrs === 1 ? " hour" : " hours");
+      r.hidden = false;
+    } else { r.hidden = true; }
+
     var d = $("jdur");
     if (times.jstart && times.jend) {
       var mins = (toMin(times.jend) - toMin(times.jstart) + 1440) % 1440;
