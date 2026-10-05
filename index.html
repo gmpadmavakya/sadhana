@@ -194,13 +194,13 @@
   </section>
 
   <div class="pair">
-    <section class="half" style="--c:#d97706">
-      <div class="head"><span class="ico">🌅</span><span class="name">Wake up</span></div>
-      <button type="button" class="tbtn empty" data-time="wake">Set time</button>
-    </section>
     <section class="half" style="--c:#4f46e5">
       <div class="head"><span class="ico">🌙</span><span class="name">To bed</span></div>
       <button type="button" class="tbtn empty" data-time="bed">Set time</button>
+    </section>
+    <section class="half" style="--c:#d97706">
+      <div class="head"><span class="ico">🌅</span><span class="name">Wake up</span></div>
+      <button type="button" class="tbtn empty" data-time="wake">Set time</button>
     </section>
   </div>
 
@@ -253,7 +253,7 @@
   </section>
 
   <section class="field rt" style="--c:#0d9488">
-    <div class="lab"><span class="ico">🤝</span><span class="name">Sangha time</span></div>
+    <div class="lab"><span class="ico">🤝</span><span class="name">Sanga time</span></div>
     <div class="rc chips" data-target="sangha"></div>
   </section>
 
@@ -305,7 +305,7 @@
   var $ = function (id) { return document.getElementById(id); };
   var textIds = ["seva", "phone"];
   var durIds = ["sravanam", "reading", "sevatime", "sangha"];
-  var durLabels = { sravanam: "Sravanam", reading: "Reading", sevatime: "Seva", sangha: "Sangha" };
+  var durLabels = { sravanam: "Sravanam", reading: "Reading", sevatime: "Seva", sangha: "Sanga" };
   var times = { wake: "", bed: "", jstart: "", jend: "" };
   var dur = { sravanam: "", reading: "", sevatime: "", sangha: "" };
   var defaults = { wake: "05:00", bed: "22:00", jstart: "05:30", jend: "08:00" };
@@ -355,8 +355,8 @@
     var seva = $("seva").value.trim().replace(/\s*\n\s*/g, ", ");
     var rows = [
       ["Date", "📅", fmtDate($("date").value)],
-      ["Wake up", "🌅", fmtTime(times.wake)],
       ["To bed", "🌙", fmtTime(times.bed)],
+      ["Wake up", "🌅", fmtTime(times.wake)],
       ["Japa rounds", "📿", String(rounds)],
       ["Japa start", "🧘", fmtTime(times.jstart)],
       ["Japa finish", "🏁", fmtTime(times.jend)],
@@ -364,7 +364,7 @@
       ["Reading time", "📖", dur.reading],
       ["Seva", "🪔", seva],
       ["Seva time", "🕐", dur.sevatime],
-      ["Sangha time", "🤝", dur.sangha]
+      ["Sanga time", "🤝", dur.sangha]
     ];
     var w = 0;
     rows.forEach(function (r) { if (r[0].length > w) w = r[0].length; });
