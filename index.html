@@ -402,8 +402,7 @@
     var r = $("rest");
     if (times.bed && times.wake) {
       var rm = (toMin(times.wake) - toMin(times.bed) + 1440) % 1440;
-      var hrs = Math.round(rm / 6) / 10;  // hours, one decimal
-      r.textContent = "Rest duration: " + hrs + (hrs === 1 ? " hour" : " hours");
+      r.textContent = "Rest duration: " + fmtDur(rm);
       r.hidden = false;
     } else { r.hidden = true; }
 
