@@ -96,7 +96,7 @@
   .tbtn.empty { color: var(--muted); font-weight: 400; }
   .trow { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 6px; align-items: center; }
   .sep { color: var(--muted); font-size: 16px; }
-  .jdur { margin-top: 6px; font-size: 15px; font-weight: 600; color: var(--c); text-align: center; }
+  .jdur { display: table; margin: 6px auto 0; padding: 4px 12px; border-radius: 999px; font-size: 15px; font-weight: 600; color: #fff; background: var(--c); text-align: center; }
   .datebox { position: relative; font-size: 16px; }
   .datebox input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; }
   .daterow { display: flex; gap: 8px; align-items: stretch; }
@@ -403,7 +403,7 @@
     if (times.bed && times.wake) {
       var rm = (toMin(times.wake) - toMin(times.bed) + 1440) % 1440;
       var hrs = Math.round(rm / 6) / 10;  // hours, one decimal
-      r.textContent = "Rest time: " + hrs + (hrs === 1 ? " hour" : " hours");
+      r.textContent = "Rest duration: " + hrs + (hrs === 1 ? " hour" : " hours");
       r.hidden = false;
     } else { r.hidden = true; }
 
