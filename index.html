@@ -162,6 +162,10 @@
   }
   .sheet-card { background: var(--surface); width: 100%; max-width: 380px; border-radius: 22px 22px 0 0; padding: 14px 16px 16px; }
   @media (min-width: 600px) { .sheet { align-items: center; } .sheet-card { border-radius: 22px; } }
+  input.hp[type="text"] { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  #fbtext { min-height: 110px; }
+  .fbstatus { min-height: 22px; font-size: 16px; color: var(--ok); margin-top: 6px; }
+  .sheet-actions.two { grid-template-columns: 1fr 1fr; margin-top: 8px; }
   .sheet-title { text-align: center; font-size: 16px; color: var(--muted); margin-bottom: 4px; }
   .tdisp { display: flex; align-items: center; justify-content: center; gap: 4px; }
   .tdisp .colon { font: 600 44px/1 "Source Serif 4", Georgia, serif; }
@@ -275,6 +279,7 @@
   <div class="actions">
     <a class="btn primary" id="send" href="#" target="_blank" rel="noopener">Send to Mentor</a>
     <button class="btn" id="copy" type="button">Copy text</button>
+    <button class="btn" id="fbopen" type="button" hidden>💬 Feedback</button>
   </div>
   <div id="status" role="status" aria-live="polite"></div>
 
@@ -305,6 +310,19 @@
       <button type="button" id="tclear">Clear</button>
       <button type="button" id="tcancel">Cancel</button>
       <button type="button" class="ok" id="tok">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet" id="fbsheet" style="--pc:#db2777" hidden>
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-label="Send feedback">
+    <div class="sheet-title">Send feedback</div>
+    <textarea id="fbtext" maxlength="1000" placeholder="Your feedback or suggestion" aria-label="Feedback"></textarea>
+    <input type="text" id="fbhp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <div class="fbstatus" id="fbstatus" role="status" aria-live="polite"></div>
+    <div class="sheet-actions two">
+      <button type="button" id="fbcancel">Cancel</button>
+      <button type="button" class="ok" id="fbsend">Send</button>
     </div>
   </div>
 </div>
@@ -642,6 +660,31 @@
   }
   window.addEventListener("resize", fitOrg);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitOrg);
+
+  /* feedback: posts to a Google Apps Script web app, so no email address is in this page */
+  var FEEDBACK_URL = "https://script.google.com/macros/s/AKfycbxMno-91MUMQ8zOkfd2lRm1m_qtNwrZgRqZpdsF7FCRK0Qvxyjz9t4nCoJnj7HQfLm7/exec";
+  var fb = $("fbsheet");
+  if (FEEDBACK_URL && /github\.io$/.test(location.hostname)) $("fbopen").hidden = false;
+  function closeFb() { fb.hidden = true; }
+  $("fbopen").addEventListener("click", function () { $("fbstatus").textContent = ""; fb.hidden = false; $("fbtext").focus(); });
+  $("fbcancel").addEventListener("click", closeFb);
+  fb.addEventListener("click", function (e) { if (e.target === fb) closeFb(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !fb.hidden) closeFb(); });
+  $("fbsend").addEventListener("click", function () {
+    var msg = $("fbtext").value.trim(), st = $("fbstatus"), btn = $("fbsend");
+    if (!msg) { st.textContent = "Please type a message."; return; }
+    btn.disabled = true; st.textContent = "Sending…";
+    fetch(FEEDBACK_URL, {
+      method: "POST", mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ message: msg, website: $("fbhp").value })
+    }).then(function () {
+      st.textContent = "Thank you 🙏"; $("fbtext").value = "";
+      setTimeout(closeFb, 1500); btn.disabled = false;
+    }, function () {
+      st.textContent = "Could not send. Please try again."; btn.disabled = false;
+    });
+  });
 
   /* init */
   fitOrg();
