@@ -150,6 +150,8 @@
     border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; width: 100%;
   }
   .btn.primary { color: #fff; border: 0; background: linear-gradient(90deg, #ea580c, #db2777, #7c3aed); }
+  .btn.fb { color: #9d174d; font-weight: 700; border: 1.5px solid #db2777; background: #fbcfe8; background: color-mix(in srgb, #db2777 24%, var(--surface)); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.fb { color: #fbcfe8; } }
   #status { min-height: 24px; text-align: center; color: var(--ok); font-size: 16px; margin-top: 8px; }
   details { margin-top: 14px; color: var(--muted); font-size: 16px; }
   details summary { cursor: pointer; padding: 8px 0; }
@@ -279,7 +281,7 @@
   <div class="actions">
     <a class="btn primary" id="send" href="#" target="_blank" rel="noopener">Send to Mentor</a>
     <button class="btn" id="copy" type="button">Copy text</button>
-    <button class="btn" id="fbopen" type="button" hidden>💬 Feedback</button>
+    <button class="btn fb" id="fbopen" type="button" hidden>💬 Feedback</button>
   </div>
   <div id="status" role="status" aria-live="polite"></div>
 
