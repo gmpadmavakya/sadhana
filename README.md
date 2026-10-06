@@ -1,3 +1,5 @@
+*🙏 Hare Kṛṣṇa. All glories to Śrīla Prabhupāda.*
+
 # 🪷 Daily Sadhana Card
 
 A phone-friendly page for filling out a daily sadhana card and sending it as a neatly formatted WhatsApp message. 📱
@@ -49,5 +51,3 @@ To open a specific chat directly, enter the number with country code under **Set
 ## 🔒 Privacy
 
 Your entries and saved number stay in your browser. Nothing leaves it except the WhatsApp message you choose to send and any feedback you submit.
-
-*🙏 Hare Kṛṣṇa. All glories to Śrīla Prabhupāda.*
