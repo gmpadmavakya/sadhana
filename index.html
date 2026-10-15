@@ -85,6 +85,18 @@
   textarea { resize: vertical; min-height: 56px; }
   input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--c, #2563eb); outline-offset: 2px; }
 
+  .yn { padding: 4px 10px; }
+  .ynrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 0; }
+  .ynrow + .ynrow { border-top: 1px solid var(--line); }
+  .ynlab { min-width: 0; font-weight: 600; font-size: 17px; line-height: 1.2; }
+  .ynbtns { display: flex; flex: 0 0 auto; gap: 6px; }
+  .ynb {
+    min-width: 62px; min-height: 40px; padding: 0 12px; font-size: 16px; font-weight: 600; font-family: inherit;
+    color: var(--ink); background: var(--chip); border: 1.5px solid var(--line); border-radius: 999px; cursor: pointer;
+  }
+  .ynb.yes[aria-pressed="true"] { background: #16a34a; border-color: #16a34a; color: #fff; }
+  .ynb.no[aria-pressed="true"] { background: var(--zero); border-color: var(--zero); color: var(--zero-ink); }
+
   .tbtn, .datebox {
     display: flex; align-items: center; justify-content: center; width: 100%; min-width: 0; min-height: 44px;
     font-size: 18px; font-weight: 600; line-height: 1.1; font-family: inherit; color: var(--ink);
@@ -200,6 +212,11 @@
   </header>
   <h1>Daily Sadhana Card</h1>
 
+  <section class="field rt" style="--c:#0ea5e9">
+    <div class="lab"><span class="ico">📛</span><span class="name">Sadhaka name</span></div>
+    <div class="rc"><input type="text" id="name" maxlength="60" autocomplete="name" autocapitalize="words" placeholder="Enter your name" aria-label="Sadhaka name"></div>
+  </section>
+
   <section class="field rt" style="--c:#2563eb">
     <div class="lab"><span class="ico">📅</span><span class="name">Date</span></div>
     <div class="rc daterow">
@@ -219,6 +236,30 @@
     </section>
     <div class="rest" id="rest" hidden></div>
   </div>
+
+  <section class="field yn" style="--c:#c026d3">
+    <div class="ynrow" data-yn="gurv">
+      <span class="ynlab">Gurvastakam 🙏🏼</span>
+      <div class="ynbtns">
+        <button type="button" class="ynb yes" data-v="Yes" aria-pressed="false" aria-label="Gurvastakam: Yes">Yes</button>
+        <button type="button" class="ynb no" data-v="No" aria-pressed="false" aria-label="Gurvastakam: No">No</button>
+      </div>
+    </div>
+    <div class="ynrow" data-yn="sik">
+      <span class="ynlab">Siksastakam 🙌🏼</span>
+      <div class="ynbtns">
+        <button type="button" class="ynb yes" data-v="Yes" aria-pressed="false" aria-label="Siksastakam: Yes">Yes</button>
+        <button type="button" class="ynb no" data-v="No" aria-pressed="false" aria-label="Siksastakam: No">No</button>
+      </div>
+    </div>
+    <div class="ynrow" data-yn="off">
+      <span class="ynlab">10 Offences 🚫</span>
+      <div class="ynbtns">
+        <button type="button" class="ynb yes" data-v="Yes" aria-pressed="false" aria-label="10 Offences: Yes">Yes</button>
+        <button type="button" class="ynb no" data-v="No" aria-pressed="false" aria-label="10 Offences: No">No</button>
+      </div>
+    </div>
+  </section>
 
   <section class="field rt" style="--c:#7c3aed">
     <div class="lab"><span class="ico">🧘</span><span class="name">Japa time</span></div>
@@ -333,11 +374,12 @@
 (function () {
   var KEY = "sadhana-card-v3";
   var $ = function (id) { return document.getElementById(id); };
-  var textIds = ["seva", "phone"];
+  var textIds = ["seva", "phone", "name"];
   var durIds = ["sravanam", "reading", "sevatime", "sangha"];
   var durLabels = { sravanam: "Sravanam", reading: "Reading", sevatime: "Seva", sangha: "Sanga" };
   var times = { wake: "", bed: "", jstart: "", jend: "" };
   var dur = { sravanam: "", reading: "", sevatime: "", sangha: "" };
+  var yn = { gurv: "", sik: "", off: "" };
   var defaults = { wake: "05:00", bed: "22:00", jstart: "05:30", jend: "08:00" };
   var titles = { wake: "Wake up", bed: "To bed", jstart: "Japa start", jend: "Japa finish" };
   var rounds = 16;
@@ -372,9 +414,10 @@
     Object.keys(times).forEach(function (k) { if (s.times && typeof s.times[k] === "string") times[k] = s.times[k]; });
     durIds.forEach(function (k) { if (s.dur && typeof s.dur[k] === "string") dur[k] = s.dur[k]; });
     if (typeof s.rounds === "number") rounds = s.rounds;
+    if (s.yn) Object.keys(yn).forEach(function (k) { if (s.yn[k] === "Yes" || s.yn[k] === "No") yn[k] = s.yn[k]; });
   }
   function save() {
-    var s = { rounds: rounds, times: times, dur: dur };
+    var s = { rounds: rounds, times: times, dur: dur, yn: yn };
     textIds.forEach(function (id) { s[id] = $(id).value; });
     try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
   }
@@ -383,10 +426,14 @@
 
   function build() {
     var seva = $("seva").value.trim().replace(/\s*\n\s*/g, ", ");
+    var sname = $("name").value.trim().replace(/\s+/g, " ");
     var rows = [
       ["Date", "📅", fmtDate($("date").value)],
       ["To bed", "🌙", fmtTime(times.bed)],
       ["Wake up", "🌅", fmtTime(times.wake)],
+      ["Gurvastakam", "🙏🏼", yn.gurv],
+      ["Siksastakam", "🙌🏼", yn.sik],
+      ["10 Offences", "🚫", yn.off],
       ["Japa rounds", "📿", String(rounds)],
       ["Japa start", "🧘", fmtTime(times.jstart)],
       ["Japa finish", "🏁", fmtTime(times.jend)],
@@ -407,7 +454,10 @@
       "*Daily Sadhana Card*",
       "```",
       lines.join("\n"),
-      "```"
+      "```",
+      "",
+      "- Aspiring to be your servant",
+      "\u201c" + sname + "\u201d"
     ].join("\n");
   }
 
@@ -473,12 +523,22 @@
     });
   }
 
+  function paintYN() {
+    document.querySelectorAll(".ynrow").forEach(function (row) {
+      var k = row.getAttribute("data-yn");
+      row.querySelectorAll(".ynb").forEach(function (b) {
+        b.setAttribute("aria-pressed", b.getAttribute("data-v") === yn[k] ? "true" : "false");
+      });
+    });
+  }
+
   function refresh() {
     $("rounds").textContent = rounds;
     $("datedisp").textContent = fmtDate($("date").value) || "Pick a date";
     paintTimes();
     paintChips();
     paintJapa();
+    paintYN();
     var text = build();
     $("preview").textContent = text;
     var phone = $("phone").value.replace(/\D/g, "");
@@ -513,6 +573,17 @@
     box._inp = inp;
   });
 
+  document.querySelectorAll(".ynrow").forEach(function (row) {
+    var k = row.getAttribute("data-yn");
+    row.querySelectorAll(".ynb").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var v = b.getAttribute("data-v");
+        yn[k] = (yn[k] === v) ? "" : v;
+        refresh();
+      });
+    });
+  });
+
   $("today").addEventListener("click", function () { $("date").value = todayISO(); refresh(); });
   $("minus").addEventListener("click", function () { if (rounds > 0) rounds--; refresh(); });
   $("plus").addEventListener("click", function () { rounds++; refresh(); });
@@ -537,6 +608,7 @@
     $("seva").value = "";
     Object.keys(times).forEach(function (k) { times[k] = ""; });
     durIds.forEach(function (k) { dur[k] = ""; });
+    Object.keys(yn).forEach(function (k) { yn[k] = ""; });
     rounds = 16; startTouched = false; endTouched = false; $("date").value = todayISO();
     refresh(); flash("Cleared");
   });
@@ -692,7 +764,7 @@
   fitOrg();
   $("date").value = todayISO();
   load();
-  ["date", "seva", "phone"].forEach(function (id) {
+  ["date", "seva", "phone", "name"].forEach(function (id) {
     $(id).addEventListener("input", refresh);
     $(id).addEventListener("change", refresh);
   });
